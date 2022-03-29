@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
 public class LeanAuto extends LinearOpMode {
+	SkystoneDetector Stone = new SkystoneDetector();
 	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
 	long startTime;
 	@Override
@@ -37,7 +38,6 @@ public class LeanAuto extends LinearOpMode {
 		waitRobot(2000);
 		drive(0);
 		strafe( 1 );
-		while()
 	}
 
 	public void waitRobot( int mills ) {
@@ -45,7 +45,7 @@ public class LeanAuto extends LinearOpMode {
 		while( startTime + mills < System.currentTimeMillis( ))
 		{
 			telemetry.update();
-
+			Stone.processFrame(Stone.mat);
 		}
 
 	}
@@ -87,6 +87,16 @@ public class LeanAuto extends LinearOpMode {
 		backLeftMotor.setPower( backLeftPower );
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
+	}
+	public void caveManFindRock()
+	{
+		strafe( 0.5 );
+		while(Stone.getStoneType()!= SkystoneDetector.StoneType.SKYSTONE)
+		{
+			Stone.processFrame(Stone.mat);
+			telemetry.update();
+		}
+		drive(1);
 	}
 }
 
