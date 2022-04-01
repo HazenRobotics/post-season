@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.autonomous.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.robots.Robot;
@@ -12,10 +13,12 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 @TeleOp(name = "LeanTeleop", group = "TeleOp")
 //@Disabled
 
-public class LeanTeleop extends OpMode
-{
+public class LeanTeleOp extends OpMode {
 
-	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
+	boolean limboMode = false;
+	boolean clawMode = false;
+	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor,liftMotor ;
+	Servo liftBase, claw;
 
 	@Override
 	public void init( ) {
@@ -29,6 +32,10 @@ public class LeanTeleop extends OpMode
 		backLeftMotor = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
+		backRightMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
+		liftBase = hardwareMap.servo.get( "lift" );
+		claw = hardwareMap.servo.get( "claw" );
+
 
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 		backLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
@@ -39,9 +46,16 @@ public class LeanTeleop extends OpMode
 
 	@Override
 	public void loop( ) {
-		SkystoneDetector stone = new SkystoneDetector();
-
+		SkystoneDetector stone = new SkystoneDetector( );
 		move( -gamepad1.left_stick_y * 2 / 3, gamepad1.left_stick_x, gamepad1.right_stick_x );
+		if( gamepad1.a ) {
+			limboMode = !limboMode;
+			limbo( limboMode );
+		}
+		if( gamepad2.b ) {
+			clawMode = !clawMode;
+			claw( clawMode );
+		}
 
 		telemetry.update( );
 	}
@@ -79,6 +93,29 @@ public class LeanTeleop extends OpMode
 
 	public static void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
-		while( startTime + mills < System.currentTimeMillis( ));
+		while( startTime + mills < System.currentTimeMillis( ) ) ;
+	}
+
+	public void limbo( boolean mode ) {
+		if( mode ) {
+			liftBase.setPosition( 30 );
+		} else {
+			liftBase.setPosition( 0 );
+		}
+	}
+
+	public void claw( boolean mode ) {
+		if( mode ) {
+		claw.setPosition( 90 );
+		} else {
+		claw.setPosition( 0 );
+		}
+	}
+	public void Up(double percent)
+	{
+		liftMotor.setPower(0.5);
+		int time=(int)(1000*percent);
+		waitRobot( time );
+		liftMotor.setPower( 0 );
 	}
 }

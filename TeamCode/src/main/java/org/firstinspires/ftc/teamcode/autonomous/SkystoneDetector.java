@@ -8,26 +8,28 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class SkystoneDetector extends OpenCvPipeline {
-	Scalar skyLowHSV = new Scalar( 220,10,0 );
-	Scalar skyHighHSV = new Scalar( 255,40,15);
-	Scalar normalLowHSV = new Scalar( 25,40,40 );
-	Scalar normalHighHSV = new Scalar(  45,100,67 );
+
+	Scalar skyLowHSV = new Scalar( 220, 10, 0 );
+	Scalar skyHighHSV = new Scalar( 255, 40, 15 );
+	Scalar normalLowHSV = new Scalar( 25, 40, 40 );
+	Scalar normalHighHSV = new Scalar( 45, 100, 67 );
 
 	Telemetry telemetry;
-	Mat mat = new Mat();
+	Mat mat = new Mat( );
 
 	public enum StoneType {
 		STONE,
 		SKYSTONE,
 		NOTHING
 	}
+
 	static double COLOR_THRESHOLD = 0.5;
 	private StoneType stoneType;
 
 	@Override
 	public Mat processFrame( Mat input ) {
-		Imgproc.cvtColor( input,mat,Imgproc.COLOR_RGB2HSV);
-		Core.inRange(mat, skyLowHSV, skyHighHSV, mat);
+		Imgproc.cvtColor( input, mat, Imgproc.COLOR_RGB2HSV );
+		Core.inRange( mat, skyLowHSV, skyHighHSV, mat );
 		double value = Core.sumElems( mat ).val[0] / (1280 * 720) / 255;
 		boolean skyInFrame = value > COLOR_THRESHOLD;
 		stoneType = skyInFrame ? StoneType.SKYSTONE : StoneType.NOTHING;
@@ -35,7 +37,7 @@ public class SkystoneDetector extends OpenCvPipeline {
 		return mat;
 	}
 
-	public StoneType getStoneType() {
+	public StoneType getStoneType( ) {
 		return stoneType;
 	}
 }
