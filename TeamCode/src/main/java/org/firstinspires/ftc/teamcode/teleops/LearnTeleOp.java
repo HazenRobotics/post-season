@@ -26,13 +26,13 @@ public class LearnTeleOp extends OpMode {
 
 	@Override
 	public void loop( ) {
-		cock( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
+		drive( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
 		if( gamepad1.a ) {
 
 		}
 	}
 
-	public void cock( double drive, double strafe, double rotate ) {
+	public void drive( double drive, double strafe, double rotate ) {
 		double frontLeftPower = drive + strafe + rotate;
 		double backLeftPower = drive - strafe + rotate;
 		double frontRightPower = drive - strafe - rotate;

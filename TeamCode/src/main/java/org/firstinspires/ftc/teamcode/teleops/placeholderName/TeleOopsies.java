@@ -75,7 +75,49 @@ public class TeleOopsies extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            double drive = -gamepad1.left_stick_y;
+            double turn  =  gamepad1.right_stick_x;
+            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+
 
         }
     }
+
+
+    public void setPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
+        frontLeft.setPower( frontLeftPower );
+        backLeft.setPower( backLeftPower );
+        frontRight.setPower( frontRightPower );
+        backRight.setPower( backRightPower );
+    }
+
+    public void drive( double power ) {
+        setPower( power, power, power, power );
+    }
+
+    public void strafe( double power ) {
+        setPower( power, -power, -power, power );
+    }
+
+    public void rotate( double power ) {
+        setPower( power, power, -power, -power);
+    }
+
+    public void stopRobot( ) {
+        frontLeft.setPower( 0 );
+        backLeft.setPower( 0 );
+        frontRight.setPower( 0 );
+        backRight.setPower( 0 );
+    }
+
+    public void move( double drive, double strafe, double rotate ) {
+        double frontLeftPower = drive + rotate + strafe;
+        double backLeftPower = drive + rotate - strafe;
+        double frontRightPower = drive - rotate - strafe;
+        double backRightPower = drive - rotate + strafe;
+        setPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
+    }
+
+
 }
