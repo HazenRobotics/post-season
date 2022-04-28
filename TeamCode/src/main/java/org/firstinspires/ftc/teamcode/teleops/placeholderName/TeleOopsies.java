@@ -75,12 +75,8 @@ public class TeleOopsies extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-
-
+            move( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
+            
         }
     }
 
@@ -118,6 +114,7 @@ public class TeleOopsies extends LinearOpMode {
         double backRightPower = drive - rotate + strafe;
         setPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
     }
+
 
 
 }
