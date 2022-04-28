@@ -76,7 +76,7 @@ public class TeleOopsies extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             move( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
-            
+
         }
     }
 
