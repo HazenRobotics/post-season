@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@TeleOp(name = "Something", group = "TeleOp")
 public class Something extends OpMode{
 
 	DcMotor  backRight, backLeft;
@@ -24,7 +24,7 @@ public class Something extends OpMode{
 		claw = hardwareMap.servo.get( "claw" );
 		plateR = hardwareMap.servo.get("plateR");
 		plateL = hardwareMap.servo.get("plateL");
-		backLeft.setDirection( DcMotorSimple.Direction.REVERSE );
+		backRight.setDirection( DcMotorSimple.Direction.REVERSE );
 		telemetry.addData( "Mode", "waiting for start" );
 		telemetry.update( );
 	}
