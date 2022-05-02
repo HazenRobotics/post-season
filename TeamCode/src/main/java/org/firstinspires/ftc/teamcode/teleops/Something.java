@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,7 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Something extends OpMode{
 
 	DcMotor  backRight, backLeft;
-	Servo lift, claw, plateR, plateL;
+	Servo plateR, plateL;
+	CRServo claw, lift;
 
 	boolean liftMode = false;
 	boolean clawMode = false;
@@ -20,8 +22,8 @@ public class Something extends OpMode{
 	public void init( ) {
 		backRight = hardwareMap.get( DcMotorEx.class, "backRight" );
 		backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
-		lift = hardwareMap.servo.get( "lift" );
-		claw = hardwareMap.servo.get( "claw" );
+		lift = hardwareMap.crservo.get( "lift" );
+		claw = hardwareMap.crservo.get( "claw" );
 		plateR = hardwareMap.servo.get("plateR");
 		plateL = hardwareMap.servo.get("plateL");
 		backRight.setDirection( DcMotorSimple.Direction.REVERSE );
@@ -34,11 +36,11 @@ public class Something extends OpMode{
 		move( -gamepad1.left_stick_y, gamepad1.left_stick_x);
 		if( gamepad1.a ) {
 			clawMode = !clawMode;
-			moveServo( clawMode, claw );
+			moveCRServo( clawMode, claw );
 		}
 		if( gamepad1.b ) {
 			liftMode = !liftMode;
-			moveServo( liftMode, lift );
+			moveCRServo( liftMode, lift );
 		}
 		if( gamepad1.x ) {
 			plateMode = !plateMode;
@@ -65,6 +67,14 @@ public class Something extends OpMode{
 			servo.setPosition( 90 );
 		} else {
 			servo.setPosition( 0 );
+		}
+	}
+	public void moveCRServo(boolean mode, CRServo servo)
+	{
+		if( mode ) {
+			servo.setPower( 0.2 );
+		} else {
+			servo.setPower( 0 );
 		}
 	}
 
