@@ -34,9 +34,8 @@ public class Something extends OpMode{
 	@Override
 	public void loop( ) {
 		move( -gamepad1.left_stick_y, gamepad1.left_stick_x);
-		if( gamepad1.a ) {
-			clawMode = !clawMode;
-			moveCRServo( clawMode, claw );
+		while( gamepad1.a ) {
+			moveCRServo( true, claw );
 		}
 		if( gamepad1.b ) {
 			liftMode = !liftMode;
