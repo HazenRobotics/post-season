@@ -14,8 +14,6 @@ public class Something extends OpMode{
 	Servo plateR, plateL;
 	CRServo claw, lift;
 
-	boolean liftMode = false;
-	boolean clawMode = false;
 	boolean plateMode = false;
 
 	@Override
@@ -34,13 +32,7 @@ public class Something extends OpMode{
 	@Override
 	public void loop( ) {
 		move( -gamepad1.left_stick_y, gamepad1.left_stick_x);
-		while( gamepad1.a ) {
-			moveCRServo( true, claw );
-		}
-		if( gamepad1.b ) {
-			liftMode = !liftMode;
-			moveCRServo( liftMode, lift );
-		}
+		scoring( gamepad1.right_stick_y, gamepad1.right_stick_x);
 		if( gamepad1.x ) {
 			plateMode = !plateMode;
 			moveServo( plateMode, plateR );
@@ -55,6 +47,11 @@ public class Something extends OpMode{
 		setMotorPower(backLeftPower, backRightPower );
 	}
 
+	public void scoring( double liftPower, double clawPower){
+		lift.setPower(liftPower);
+		claw.setPower(clawPower);
+	}
+
 	public void setMotorPower( double backLeftPower, double backRightPower ) {
 		backLeft.setPower( backLeftPower );
 		backRight.setPower( backRightPower );
@@ -66,14 +63,6 @@ public class Something extends OpMode{
 			servo.setPosition( 90 );
 		} else {
 			servo.setPosition( 0 );
-		}
-	}
-	public void moveCRServo(boolean mode, CRServo servo)
-	{
-		if( mode ) {
-			servo.setPower( 0.2 );
-		} else {
-			servo.setPower( 0 );
 		}
 	}
 
