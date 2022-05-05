@@ -7,10 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-@TeleOp(name = "Something", group = "TeleOp")
-public class Something extends OpMode{
 
-	DcMotor  backRight, backLeft;
+@TeleOp(name = "Something", group = "TeleOp")
+public class Something extends OpMode {
+
+	DcMotor backRight, backLeft;
 	Servo plateR, plateL;
 	CRServo claw, lift;
 
@@ -22,8 +23,8 @@ public class Something extends OpMode{
 		backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		lift = hardwareMap.crservo.get( "lift" );
 		claw = hardwareMap.crservo.get( "claw" );
-		plateR = hardwareMap.servo.get("plateR");
-		plateL = hardwareMap.servo.get("plateL");
+		plateR = hardwareMap.servo.get( "plateR" );
+		plateL = hardwareMap.servo.get( "plateL" );
 		backRight.setDirection( DcMotorSimple.Direction.REVERSE );
 		telemetry.addData( "Mode", "waiting for start" );
 		telemetry.update( );
@@ -31,8 +32,8 @@ public class Something extends OpMode{
 
 	@Override
 	public void loop( ) {
-		move( -gamepad1.left_stick_y, gamepad1.left_stick_x);
-		scoring( gamepad1.right_stick_y, gamepad1.right_stick_x);
+		move( -gamepad1.left_stick_y, gamepad1.left_stick_x );
+		scoring( gamepad1.right_stick_y, gamepad1.right_stick_x );
 		if( gamepad1.x ) {
 			plateMode = !plateMode;
 			moveServo( plateMode, plateR );
@@ -44,12 +45,12 @@ public class Something extends OpMode{
 		double backLeftPower = drive + rotate;
 		double backRightPower = drive - rotate;
 
-		setMotorPower(backLeftPower, backRightPower );
+		setMotorPower( backLeftPower, backRightPower );
 	}
 
-	public void scoring( double liftPower, double clawPower){
-		lift.setPower(liftPower);
-		claw.setPower(clawPower);
+	public void scoring( double liftPower, double clawPower ) {
+		lift.setPower( liftPower );
+		claw.setPower( clawPower );
 	}
 
 	public void setMotorPower( double backLeftPower, double backRightPower ) {
@@ -57,9 +58,11 @@ public class Something extends OpMode{
 		backRight.setPower( backRightPower );
 	}
 
-	public void moveServo(boolean mode, Servo servo)
-	{
+	//since it only controls the plate servos, should we rename?
+	//also I think I figured out what's wrong with the R servo (for real this time)
+	public void moveServo( boolean mode, Servo servo ) {
 		if( mode ) {
+			//shouldn't this be 180?
 			servo.setPosition( 90 );
 		} else {
 			servo.setPosition( 0 );
