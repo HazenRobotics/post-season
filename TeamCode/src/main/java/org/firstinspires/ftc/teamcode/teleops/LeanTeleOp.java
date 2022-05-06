@@ -40,8 +40,12 @@ public class LeanTeleOp extends OpMode {
 
 		telemetry.addData( "Mode", "waiting for start" );
 		telemetry.update( );
-		liftBase.setPosition( 0.5 );
-//		liftBase.setPosition( 0 );
+		liftBase.setPosition( 0.25 );
+
+		long startTime = System.currentTimeMillis( ); // wait 2 seconds before moving the lift back
+		while( startTime + 2000 > System.currentTimeMillis( ) ) ;
+
+		liftBase.setPosition( 0 );
 	}
 
 	@Override
@@ -96,12 +100,14 @@ public class LeanTeleOp extends OpMode {
 
 	public void limbo( boolean mode ) {
 		if( mode ) {
-			liftBase.setPosition( 1 );
-		} else {
 			liftBase.setPosition( 0 );
+		} else {
+			liftBase.setPosition( 0.25 );
 		}
-	}
 
+		// Sam: does the same thing:
+		// liftBase.setPosition( mode ? 0 : 0.25 );
+	}
 
 
 	public void Up( double percent ) {
