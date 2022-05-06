@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.autonomous.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
 @TeleOp(name = "LeanTeleop", group = "TeleOp")
@@ -17,8 +16,9 @@ public class LeanTeleOp extends OpMode {
 
 	boolean limboMode = false;
 	boolean clawMode = false;
-	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor,liftMotor ;
+	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
 	Servo liftBase, claw;
+	double power = 1;
 
 	@Override
 	public void init( ) {
@@ -32,32 +32,51 @@ public class LeanTeleOp extends OpMode {
 		backLeftMotor = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
-		backRightMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
-		liftBase = hardwareMap.servo.get( "lift" );
-		claw = hardwareMap.servo.get( "claw" );
+		liftMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
+		liftBase = hardwareMap.servo.get( "lift servo" );
+		//claw = hardwareMap.servo.get( "claw" );
 
 
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 		backLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 
 		telemetry.addData( "Mode", "waiting for start" );
+		if( gamepad1.dpad_up && power < 1 ) {
+			power -= 0.1;
+		}
+		if( gamepad1.dpad_up && power > 0 ) {
+			power += 0.1;
+		}
 		telemetry.update( );
+
 	}
 
 	@Override
 	public void loop( ) {
-		SkystoneDetector stone = new SkystoneDetector( );
-		move( -gamepad1.left_stick_y * 2 / 3, gamepad1.left_stick_x, gamepad1.right_stick_x );
+
+		Up( );
 		if( gamepad1.a ) {
-			limboMode = !limboMode;
-			limbo( limboMode );
+			move( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, power / 2 );
+		} else {
+			move( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, power );
+
 		}
-		if( gamepad2.b ) {
+		if( gamepad1.dpad_up && power < 1 ) {
+			power -= 0.1;
+		}
+		if( gamepad1.dpad_up && power > 0 ) {
+			power += 0.1;
+		}
+		if( gamepad1.a ) {
+			while( gamepad1.a );
+			limbo( limboMode );
+			limboMode = !limboMode;
+		}
+		if( gamepad1.left_bumper ) {
+			//claw( clawMode );
 			clawMode = !clawMode;
-			claw( clawMode );
 		}
 
-		telemetry.update( );
 	}
 
 	/**
@@ -67,29 +86,18 @@ public class LeanTeleOp extends OpMode {
 	 * @param strafe strafe power
 	 * @param rotate power
 	 */
-	public void move( double drive, double strafe, double rotate ) {
-		double frontLeftPower = drive + strafe + rotate;
-		double backLeftPower = drive - strafe + rotate;
-		double frontRightPower = drive - strafe - rotate;
-		double backRightPower = drive + strafe - rotate;
+	public void move( double drive, double strafe, double rotate, double power ) {
+		double frontLeftPower = (drive + strafe + rotate) * power;
+		double backLeftPower = (drive - strafe + rotate) * power;
+		double frontRightPower = (drive - strafe - rotate) * power;
+		double backRightPower = (drive + strafe - rotate) * power;
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
-	}
-
-	/**
-	 * set individual power
-	 *
-	 * @param frontLeftPower  power
-	 * @param backLeftPower   power
-	 * @param frontRightPower power
-	 * @param backRightPower  power
-	 */
-	public void setMotorPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
 		frontLeftMotor.setPower( frontLeftPower );
 		backLeftMotor.setPower( backLeftPower );
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
 	}
+
 
 	public static void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
@@ -98,24 +106,27 @@ public class LeanTeleOp extends OpMode {
 
 	public void limbo( boolean mode ) {
 		if( mode ) {
-			liftBase.setPosition( 30 );
+			liftBase.setPosition( 90 );
 		} else {
 			liftBase.setPosition( 0 );
 		}
 	}
 
-	public void claw( boolean mode ) {
+	/*public void claw( boolean mode ) {
 		if( mode ) {
-		claw.setPosition( 90 );
+			claw.setPosition( 90 );
 		} else {
-		claw.setPosition( 0 );
+			claw.setPosition( 0 );
 		}
-	}
-	public void Up(double percent)
-	{
-		liftMotor.setPower(0.5);
-		int time=(int)(1000*percent);
-		waitRobot( time );
-		liftMotor.setPower( 0 );
+	}*/
+
+	public void Up( ) {
+		if( gamepad1.right_trigger > 0 ) {
+			liftMotor.setPower( 1 );
+		} else if( gamepad1.left_trigger > 0 ) {
+			liftMotor.setPower( -1 );
+		} else {
+			liftMotor.setPower( 0 );
+		}
 	}
 }
