@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,14 +9,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.autonomous.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
-@TeleOp(name = "LeanTeleop", group = "TeleOp")
+@TeleOp(name = "LeanTeleOp", group = "TeleOp")
 //@Disabled
-
 public class LeanTeleOp extends OpMode {
 
 	boolean limboMode = false;
 	boolean clawMode = false;
-	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor,liftMotor ;
+	DcMotorEx frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
 	Servo liftBase, claw;
 
 	@Override
@@ -33,8 +31,8 @@ public class LeanTeleOp extends OpMode {
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
-		liftBase = hardwareMap.servo.get( "lift" );
-		claw = hardwareMap.servo.get( "claw" );
+		liftBase = hardwareMap.servo.get( "liftBase" );
+//		claw = hardwareMap.servo.get( "servo" );
 
 
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
@@ -42,20 +40,24 @@ public class LeanTeleOp extends OpMode {
 
 		telemetry.addData( "Mode", "waiting for start" );
 		telemetry.update( );
+		liftBase.setPosition( 0.25 );
+
+		long startTime = System.currentTimeMillis( ); // wait 2 seconds before moving the lift back
+		while( startTime + 2000 > System.currentTimeMillis( ) ) ;
+
+		liftBase.setPosition( 0 );
 	}
 
 	@Override
 	public void loop( ) {
 		SkystoneDetector stone = new SkystoneDetector( );
 		move( -gamepad1.left_stick_y * 2 / 3, gamepad1.left_stick_x, gamepad1.right_stick_x );
-		if( gamepad1.a ) {
+		if( gamepad1.left_bumper ) {
+			while( gamepad1.a ) ;
 			limboMode = !limboMode;
 			limbo( limboMode );
 		}
-		if( gamepad2.b ) {
-			clawMode = !clawMode;
-			claw( clawMode );
-		}
+
 
 		telemetry.update( );
 	}
@@ -98,23 +100,19 @@ public class LeanTeleOp extends OpMode {
 
 	public void limbo( boolean mode ) {
 		if( mode ) {
-			liftBase.setPosition( 30 );
-		} else {
 			liftBase.setPosition( 0 );
+		} else {
+			liftBase.setPosition( 0.25 );
 		}
+
+		// Sam: does the same thing:
+		// liftBase.setPosition( mode ? 0 : 0.25 );
 	}
 
-	public void claw( boolean mode ) {
-		if( mode ) {
-		claw.setPosition( 90 );
-		} else {
-		claw.setPosition( 0 );
-		}
-	}
-	public void Up(double percent)
-	{
-		liftMotor.setPower(0.5);
-		int time=(int)(1000*percent);
+
+	public void Up( double percent ) {
+		liftMotor.setPower( 0.5 );
+		int time = (int) (1000 * percent);
 		waitRobot( time );
 		liftMotor.setPower( 0 );
 	}
