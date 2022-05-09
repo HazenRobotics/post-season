@@ -1,16 +1,24 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
+@Autonomous(name = "LeanAuto", group = "Autonomous")
 public class LeanAuto extends LinearOpMode {
 
-	SkystoneDetector Stone = new SkystoneDetector( );
-	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
+	boolean limboMode = false;
+	boolean clawMode = false;
+	boolean aWasPressed = false;
+	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
+	Servo liftBase, claw;
+	double power = 1;
 	long startTime;
 
 	@Override
@@ -24,6 +32,10 @@ public class LeanAuto extends LinearOpMode {
 		backLeftMotor = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
+		liftMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
+		liftBase = hardwareMap.servo.get( "lift servo" );
+		//claw = hardwareMap.servo.get( "claw" );
+
 
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 		backLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
@@ -34,18 +46,26 @@ public class LeanAuto extends LinearOpMode {
 		startTime = System.currentTimeMillis( );
 		telemetry.addData( "Mode", "TimeLeft: " + TimeLeft( ) );
 		telemetry.update( );
-		drive( 1 );
-		waitRobot( 2000 );
-		drive( 0 );
+
+		drive(1);
+		waitRobot( 500 );
+
+		strafe( -1 );
+		waitRobot( 500 );
+
+		rotate( 1 );
+		waitRobot( 1000 );
+
 		strafe( 1 );
+		waitRobot( 1000 );
+
+
+
 	}
 
 	public void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
-		while( startTime + mills < System.currentTimeMillis( ) ) {
-			telemetry.update( );
-			Stone.processFrame( Stone.mat );
-		}
+		while( (startTime + mills) > System.currentTimeMillis( ) );
 
 	}
 
@@ -68,10 +88,11 @@ public class LeanAuto extends LinearOpMode {
 	}
 
 	public void rotate( double rotate ) {
-		double frontLeftPower = rotate;
-		double backLeftPower = rotate;
-		double frontRightPower = -rotate;
-		double backRightPower = -rotate;
+		double frontLeftPower = rotate/2;
+		double backLeftPower = rotate/2;
+		double frontRightPower = -rotate/2;
+		double backRightPower = -rotate/2
+				;
 
 		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
 	}
@@ -86,15 +107,34 @@ public class LeanAuto extends LinearOpMode {
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
 	}
+	public void limbo( boolean mode ) {
+		if( !mode ) {
+			liftBase.setPosition( 0.4 );
+		} else {
+			liftBase.setPosition( 0 );
 
-	public void caveManFindRock( ) {
-		strafe( 0.5 );
-		while( Stone.getStoneType( ) != SkystoneDetector.StoneType.SKYSTONE ) {
-			Stone.processFrame( Stone.mat );
-			telemetry.update( );
 		}
-		drive( 1 );
 	}
+
+	/*public void claw( boolean mode ) {
+		if( mode ) {
+			claw.setPosition( 90 );
+		} else {
+			claw.setPosition( 0 );
+		}
+	}*/
+
+	public void Up( ) {
+		if( gamepad1.right_trigger > 0 ) {
+			liftMotor.setPower( 1 );
+		} else if( gamepad1.left_trigger > 0 ) {
+			liftMotor.setPower( -1 );
+		} else {
+			liftMotor.setPower( 0 );
+		}
+	}
+
+
 }
 
 

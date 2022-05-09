@@ -16,6 +16,7 @@ public class LeanTeleOp extends OpMode {
 
 	boolean limboMode = false;
 	boolean clawMode = false;
+	boolean aWasPressed = false;
 	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
 	Servo liftBase, claw;
 	double power = 1;
@@ -67,8 +68,7 @@ public class LeanTeleOp extends OpMode {
 		if( gamepad1.dpad_up && power > 0 ) {
 			power += 0.1;
 		}
-		if( gamepad1.a ) {
-			while( gamepad1.a );
+		if( aWasPressed && !gamepad1.a ) {
 			limbo( limboMode );
 			limboMode = !limboMode;
 		}
@@ -76,6 +76,7 @@ public class LeanTeleOp extends OpMode {
 			//claw( clawMode );
 			clawMode = !clawMode;
 		}
+		aWasPressed = gamepad1.a;
 
 	}
 
@@ -87,10 +88,10 @@ public class LeanTeleOp extends OpMode {
 	 * @param rotate power
 	 */
 	public void move( double drive, double strafe, double rotate, double power ) {
-		double frontLeftPower = (drive + strafe + rotate) * power;
-		double backLeftPower = (drive - strafe + rotate) * power;
-		double frontRightPower = (drive - strafe - rotate) * power;
-		double backRightPower = (drive + strafe - rotate) * power;
+		double frontLeftPower = (drive + strafe + rotate/3) * power;
+		double backLeftPower = (drive - strafe + rotate/3) * power;
+		double frontRightPower = (drive - strafe - rotate/3) * power;
+		double backRightPower = (drive + strafe - rotate/3) * power;
 
 		frontLeftMotor.setPower( frontLeftPower );
 		backLeftMotor.setPower( backLeftPower );
@@ -105,10 +106,11 @@ public class LeanTeleOp extends OpMode {
 	}
 
 	public void limbo( boolean mode ) {
-		if( mode ) {
-			liftBase.setPosition( 90 );
+		if( !mode ) {
+			liftBase.setPosition( 0.4 );
 		} else {
 			liftBase.setPosition( 0 );
+
 		}
 	}
 
