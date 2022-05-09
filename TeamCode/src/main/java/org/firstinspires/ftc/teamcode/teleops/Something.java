@@ -15,6 +15,7 @@ public class Something extends OpMode {
 	Servo plateR, plateL;
 	CRServo claw, lift;
 
+	boolean xWasPressed = false;
 	boolean plateMode = false;
 
 	@Override
@@ -34,11 +35,12 @@ public class Something extends OpMode {
 	public void loop( ) {
 		move( -gamepad1.left_stick_y, gamepad1.left_stick_x );
 		scoring( gamepad1.right_stick_y, gamepad1.right_stick_x );
-		if( gamepad1.x ) {
+		if( gamepad1.x && !xWasPressed ) {
 			plateMode = !plateMode;
 			moveServo( plateMode, plateR );
 			moveServo( plateMode, plateL );
 		}
+		xWasPressed = gamepad1.x;
 	}
 
 	public void move( double drive, double rotate ) {

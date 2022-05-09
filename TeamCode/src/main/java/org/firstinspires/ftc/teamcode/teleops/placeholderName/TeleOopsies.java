@@ -53,20 +53,20 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
+@TeleOp(name="TeleOopsies - team Pancit", group="Linear Opmode")
+//@Disabled
 public class TeleOopsies extends LinearOpMode {
-    DcMotor frontLeft;
-    DcMotor backLeft;
-    DcMotor frontRight;
-    DcMotor backRight;
+    DcMotorEx frontLeft;
+    DcMotorEx backLeft;
+    DcMotorEx frontRight;
+    DcMotorEx backRight;
 
     @Override
     public void runOpMode() {
         frontLeft = hardwareMap.get( DcMotorEx.class, "frontLeft" );
         backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
         frontRight = hardwareMap.get( DcMotorEx.class, "frontRight" );
-        backLeft = hardwareMap.get( DcMotorEx.class, "backRight" );
+        backRight = hardwareMap.get( DcMotorEx.class, "backRight" );
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
@@ -75,7 +75,7 @@ public class TeleOopsies extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            move( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
+            move( gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x );
 
         }
     }
@@ -93,7 +93,7 @@ public class TeleOopsies extends LinearOpMode {
     }
 
     public void strafe( double power ) {
-        setPower( power, -power, -power, power );
+        setPower( -power, power, power, -power );
     }
 
     public void rotate( double power ) {
