@@ -47,18 +47,15 @@ public class LeanAuto extends LinearOpMode {
 		telemetry.addData( "Mode", "TimeLeft: " + TimeLeft( ) );
 		telemetry.update( );
 
-		drive(1);
-		waitRobot( 500 );
-
-		strafe( -1 );
-		waitRobot( 500 );
-
+		drive( 1);
+		waitRobot( 700 );
 		rotate( 1 );
+		waitRobot( 500 );
+		drive( 1 );
 		waitRobot( 1000 );
-
-		strafe( 1 );
-		waitRobot( 1000 );
-
+		strafe( 0.2 );
+		waitRobot( 200 );
+		drive(0);
 
 
 	}
@@ -88,11 +85,10 @@ public class LeanAuto extends LinearOpMode {
 	}
 
 	public void rotate( double rotate ) {
-		double frontLeftPower = rotate/2;
-		double backLeftPower = rotate/2;
-		double frontRightPower = -rotate/2;
-		double backRightPower = -rotate/2
-				;
+		double frontLeftPower = rotate/1.5;
+		double backLeftPower = rotate/1.5;
+		double frontRightPower = -rotate/1.5;
+		double backRightPower = -rotate/1.5;
 
 		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
 	}

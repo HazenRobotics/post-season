@@ -88,10 +88,10 @@ public class LeanTeleOp extends OpMode {
 	 * @param rotate power
 	 */
 	public void move( double drive, double strafe, double rotate, double power ) {
-		double frontLeftPower = (drive + strafe + rotate/3) * power;
-		double backLeftPower = (drive - strafe + rotate/3) * power;
-		double frontRightPower = (drive - strafe - rotate/3) * power;
-		double backRightPower = (drive + strafe - rotate/3) * power;
+		double frontLeftPower = (drive + strafe + rotate/2) * power;
+		double backLeftPower = (drive - strafe + rotate/2) * power;
+		double frontRightPower = (drive - strafe - rotate/2) * power;
+		double backRightPower = (drive + strafe - rotate/2) * power;
 
 		frontLeftMotor.setPower( frontLeftPower );
 		backLeftMotor.setPower( backLeftPower );
