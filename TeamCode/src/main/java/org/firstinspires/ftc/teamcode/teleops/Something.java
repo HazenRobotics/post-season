@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import static com.qualcomm.robotcore.hardware.Servo.MAX_POSITION;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -37,8 +39,7 @@ public class Something extends OpMode {
 		scoring( gamepad1.right_stick_y, gamepad1.right_stick_x );
 		if( gamepad1.x && !xWasPressed ) {
 			plateMode = !plateMode;
-			moveServo( plateMode, plateR );
-			moveServo( plateMode, plateL );
+			plateToggle( plateMode );
 		}
 		xWasPressed = gamepad1.x;
 	}
@@ -60,14 +61,13 @@ public class Something extends OpMode {
 		backRight.setPower( backRightPower );
 	}
 
-	//since it only controls the plate servos, should we rename?
-	//also I think I figured out what's wrong with the R servo (for real this time)
-	public void moveServo( boolean mode, Servo servo ) {
+	public void plateToggle( boolean mode ) {
 		if( mode ) {
-			//shouldn't this be 180?
-			servo.setPosition( 90 );
+			plateL.setPosition( 1.0 );
+			plateR.setPosition( 1.0 );
 		} else {
-			servo.setPosition( 0 );
+			plateL.setPosition( 0.0 );
+			plateR.setPosition( 0.0 );
 		}
 	}
 
