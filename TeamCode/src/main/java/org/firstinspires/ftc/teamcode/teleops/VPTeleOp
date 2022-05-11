@@ -14,7 +14,7 @@ public class VPTeleOp extends OpMode {
 
   boolean foundTogB = false;
   boolean blockGrabB = false;
-  boolean clawTiltB = false;t
+  boolean clawTiltB = false;
 
   @Override
   public void init( ) {
