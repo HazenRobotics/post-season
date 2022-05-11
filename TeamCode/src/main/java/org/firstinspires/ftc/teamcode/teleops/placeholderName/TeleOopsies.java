@@ -39,20 +39,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @TeleOp(name="TeleOopsies - team Pancit", group="Linear Opmode")
 //@Disabled
 public class TeleOopsies extends LinearOpMode {
@@ -75,17 +61,17 @@ public class TeleOopsies extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            move( gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x );
+            move( gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x );
 
         }
     }
 
 
     public void setPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
-        frontLeft.setPower( frontLeftPower );
-        backLeft.setPower( backLeftPower );
+        frontLeft.setPower( frontLeftPower * 0.54 );
+        backLeft.setPower( backLeftPower * 0.54 );
         frontRight.setPower( frontRightPower );
-        backRight.setPower( backRightPower );
+        backRight.setPower( backRightPower * 0.54 );
     }
 
     public void drive( double power ) {
@@ -93,7 +79,7 @@ public class TeleOopsies extends LinearOpMode {
     }
 
     public void strafe( double power ) {
-        setPower( -power, power, power, -power );
+        setPower( power, -power, -power, power );
     }
 
     public void rotate( double power ) {
@@ -108,10 +94,10 @@ public class TeleOopsies extends LinearOpMode {
     }
 
     public void move( double drive, double strafe, double rotate ) {
-        double frontLeftPower = drive + rotate + strafe;
-        double backLeftPower = drive + rotate - strafe;
-        double frontRightPower = drive - rotate - strafe;
-        double backRightPower = drive - rotate + strafe;
+        double frontLeftPower = drive + rotate - strafe;
+        double backLeftPower = drive + rotate + strafe;
+        double frontRightPower = drive - rotate + strafe;
+        double backRightPower = drive - rotate - strafe;
         setPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
     }
 
