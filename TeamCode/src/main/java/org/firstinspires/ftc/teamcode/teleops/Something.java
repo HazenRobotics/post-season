@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Something extends OpMode {
 
 	DcMotor backRight, backLeft;
-	Servo plateR, plateL;
+	CRServo plateR, plateL;
 	CRServo claw, lift;
 
 	boolean xWasPressed = false;
@@ -26,8 +26,8 @@ public class Something extends OpMode {
 		backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		lift = hardwareMap.crservo.get( "lift" );
 		claw = hardwareMap.crservo.get( "claw" );
-		plateR = hardwareMap.servo.get( "plateR" );
-		plateL = hardwareMap.servo.get( "plateL" );
+		plateR = hardwareMap.crservo.get( "plateR" );
+		plateL = hardwareMap.crservo.get( "plateL" );
 		backRight.setDirection( DcMotorSimple.Direction.REVERSE );
 		telemetry.addData( "Mode", "waiting for start" );
 		telemetry.update( );
@@ -61,14 +61,23 @@ public class Something extends OpMode {
 		backRight.setPower( backRightPower );
 	}
 
+	public static void waitRobot( int mills ) {
+		long startTime = System.currentTimeMillis( );
+		while( startTime + mills < System.currentTimeMillis( ) ) ;
+	}
+
 	public void plateToggle( boolean mode ) {
 		if( mode ) {
-			plateL.setPosition( 1.0 );
-			plateR.setPosition( 1.0 );
+			plateL.setPower( 1.0 );
+			plateR.setPower( 1.0 );
+			telemetry.addData( "Plate Movers:", "activated" );
 		} else {
-			plateL.setPosition( 0.0 );
-			plateR.setPosition( 0.0 );
+			plateL.setPower( -1.0 );
+			plateR.setPower( -1.0 );
+			telemetry.addData( "Plate Movers:", "activated" );
 		}
+		telemetry.update( );
+		waitRobot( 500 );
 	}
 
 }
