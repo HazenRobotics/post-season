@@ -19,13 +19,13 @@ public class VPTeleOp extends OpMode {
 	@Override
 	public void init( ) {
 
-		leftMotor = hardwareMap.get( DcMotorEx.class,"leftMotor" );
-		rightMotor = hardwareMap.get( DcMotorEx.class,"rightMotor" );
+		leftMotor = hardwareMap.get( DcMotorEx.class, "leftMotor" );
+		rightMotor = hardwareMap.get( DcMotorEx.class, "rightMotor" );
 
-		foundLeft = hardwareMap.servo.get("foundLeft");
-		foundRight = hardwareMap.servo.get("foundRight");
-		clawTilter = hardwareMap.servo.get("clawTilter");
-		clawGrabber = hardwareMap.servo.get("clawGrabber");
+		foundLeft = hardwareMap.servo.get( "foundLeft" );
+		foundRight = hardwareMap.servo.get( "foundRight" );
+		clawTilter = hardwareMap.servo.get( "clawTilter" );
+		blockGrabber = hardwareMap.servo.get( "blockGrabber" );
 
 		leftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 	}
@@ -34,27 +34,22 @@ public class VPTeleOp extends OpMode {
 	@Override
 	public void loop( ) {
 
-		if(gamepad1.y)
-		{
-			foundTog();
+		if( gamepad1.y ) {
+			foundTog( );
 		}
 
-		if(gamepad1.x)
-
-		{
-			clawTiltTog();
+		if( gamepad1.x ) {
+			clawTiltTog( );
 		}
 
-		if(gamepad1.x)
-
-		{
-			blockGrabTog();
+		if( gamepad1.a ) {
+			blockGrabTog( );
 		}
 
-		move(-gamepad1.left_stick_y, gamepad2.right_stick_x );
+		move( -gamepad1.left_stick_y, gamepad2.right_stick_x );
 	}
 
-	public void move(double drive, double rotate) {
+	public void move( double drive, double rotate ) {
 
 		double leftPower = drive - rotate;
 		double rightPower = drive - rotate;
@@ -63,43 +58,46 @@ public class VPTeleOp extends OpMode {
 		rightMotor.setPower( rightPower );
 	}
 
-	public void foundTog(){
+	public void foundTog( ) {
 
-		if (foundTogB){
+		if( foundTogB ) {
 
 			foundLeft.setPosition( 0.5 );
 			foundRight.setPosition( 0.5 );
+		} else {
+
+			foundLeft.setPosition( 0.0 );
+			foundRight.setPosition( 1.0 );
+
 		}
-		else{
 
-			foundLeft.setPosition( 0);
-			foundRight.setPosition( 1 );
-
-		}
-
-		foundTogB=!foundTogB;
+		foundTogB = !foundTogB;
 	}
 
-	public void clawTiltTog(){
+	public void clawTiltTog( ) {
 
-		if (clawTiltB){
+		if( clawTiltB ) {
 
 			clawTilter.setPosition( 0.75 );
-		}
-		else{
+		} else {
 
 			clawTilter.setPosition( 0.50 );
 		}
 
-		clawTiltB=!clawTiltB;
+		clawTiltB = !clawTiltB;
 	}
 
-	public void blockGrabTog(){
+	public void blockGrabTog( ) {
 
-		if (blockGrabB){
+		if( blockGrabB ) {
 
-			clawTilter.setPosition(  );
+			blockGrabber.setPosition( 0.0 );
+		} else {
+
+			blockGrabber.setPosition( 0.50 );
 		}
+
+		blockGrabB = !blockGrabB;
 	}
 }
 
