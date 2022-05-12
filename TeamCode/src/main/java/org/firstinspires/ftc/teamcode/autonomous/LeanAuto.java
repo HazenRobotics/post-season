@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,14 +14,12 @@ public class LeanAuto extends LinearOpMode {
 
 	boolean limboMode = false;
 	boolean clawMode = false;
-	boolean aWasPressed = false;
 	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
-	Servo liftBase, claw;
-	double power = 1;
+	Servo liftBase, claw,liftToggle;
 	long startTime;
 
 	@Override
-	public void runOpMode( ) throws InterruptedException {
+	public void runOpMode( ) {
 		Robot.createMatchLogFile( getClass( ).getSimpleName( ) );
 
 		telemetry.addData( "Mode", "Initiating robot..." );
@@ -33,8 +30,9 @@ public class LeanAuto extends LinearOpMode {
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
 		liftMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
-		liftBase = hardwareMap.servo.get( "lift servo" );
-		//claw = hardwareMap.servo.get( "claw" );
+		liftBase = hardwareMap.servo.get( "liftBase" );
+		liftToggle = hardwareMap.servo.get( "liftToggle" );
+		claw = hardwareMap.servo.get( "claw" );
 
 
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
@@ -46,45 +44,65 @@ public class LeanAuto extends LinearOpMode {
 		startTime = System.currentTimeMillis( );
 		telemetry.addData( "Mode", "TimeLeft: " + TimeLeft( ) );
 		telemetry.update( );
+		//start
+		drive(1);
+		waitRobot( 650 );
+		//pick up block
+		for(int i=0; opModeIsActive()&& i<4; i++)
+		{
+			//grabs block and lowers lift
+			claw( );
+			limbo();
+			//moves over line
+			strafe( 1 );
+			waitRobot( 1000+(i*100) );
+			//raise and drop
+			limbo();
+			claw();
+			//limbo and back over
+			limbo();
+			strafe( -1 );
+			waitRobot( 1000+((i+1)*100) );
+		}
+		if(opModeIsActive())
+		{
+			limbo();
+			strafe( 1 );
+			waitRobot( 750 );
+		}
+		while(opModeIsActive())
+		{
+			rotate( 360 ,1 );
 
-		//180 is 180
-
-		rotate( 360 );
-		setMotorPower( 0, 0, 0, 0 );
-
+		}
 	}
 
 	public void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
-		while( (startTime + mills) > System.currentTimeMillis( ) );
+		while( (startTime + mills) > System.currentTimeMillis( ) && opModeIsActive())
+		{
+			telemetry.update( );
+		}
 
 	}
 
 	public void drive( double drive ) {
-		double frontLeftPower = drive;
-		double backLeftPower = drive;
-		double frontRightPower = drive;
-		double backRightPower = drive;
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
+		setMotorPower( drive, drive, drive, drive );
 	}
 
 	public void strafe( double strafe ) {
-		double frontLeftPower = strafe;
 		double backLeftPower = -strafe;
 		double frontRightPower = -strafe;
-		double backRightPower = strafe;
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
+		setMotorPower( strafe, backLeftPower, frontRightPower, strafe );
 	}
 
-	public void rotate( int amount ) {
-		double frontLeftPower = 1;
-		double backLeftPower = 1;
-		double frontRightPower = -1;
-		double backRightPower = -1;
+	public void rotate( int amount,int drive ) {
+		double frontRightPower = -drive;
+		double backRightPower = -drive;
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
+		setMotorPower( drive, drive, frontRightPower, backRightPower );
 		waitRobot( (int)(amount*3.5) );
 	}
 
@@ -98,31 +116,22 @@ public class LeanAuto extends LinearOpMode {
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
 	}
-	public void limbo( boolean mode ) {
-		if( !mode ) {
+	public void limbo(   ) {
+		if( !limboMode ) {
 			liftBase.setPosition( 0.4 );
 		} else {
 			liftBase.setPosition( 0 );
-
 		}
+		limboMode = !limboMode;
 	}
 
-	/*public void claw( boolean mode ) {
-		if( mode ) {
-			claw.setPosition( 90 );
+	public void claw(  ) {
+		if( !clawMode ) {
+			claw.setPosition( 1 );
 		} else {
 			claw.setPosition( 0 );
 		}
-	}*/
-
-	public void Up( ) {
-		if( gamepad1.right_trigger > 0 ) {
-			liftMotor.setPower( 1 );
-		} else if( gamepad1.left_trigger > 0 ) {
-			liftMotor.setPower( -1 );
-		} else {
-			liftMotor.setPower( 0 );
-		}
+		clawMode = !clawMode;
 	}
 
 
