@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@TeleOp()
 public class VPTeleOp extends OpMode {
 
 	DcMotor leftMotor, rightMotor;
@@ -48,12 +50,16 @@ public class VPTeleOp extends OpMode {
 			blockGrabTog( );
 		}
 
-		move( -gamepad1.left_stick_y, gamepad2.right_stick_x );
+		move( -gamepad1.left_stick_y, gamepad1.right_stick_x );
+	}
+	public static void waitRobot( int mills ) {
+		long startTime = System.currentTimeMillis( );
+		while( startTime + mills < System.currentTimeMillis( ) ) ;
 	}
 
 	public void move( double drive, double rotate ) {
 
-		double leftPower = drive - rotate;
+		double leftPower = drive + rotate;
 		double rightPower = drive - rotate;
 
 		leftMotor.setPower( leftPower );
@@ -81,7 +87,7 @@ public class VPTeleOp extends OpMode {
 
 		if( clawTiltB ) {
 
-			clawTilter.setPosition( 0.75 );
+			clawTilter.setPosition( 0.25 );
 
 		} else {
 
