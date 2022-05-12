@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -24,8 +25,8 @@ public class VPTeleOp extends OpMode {
 
 		foundLeft = hardwareMap.servo.get( "foundLeft" );
 		foundRight = hardwareMap.servo.get( "foundRight" );
-		clawTilter = hardwareMap.servo.get( "clawTilter" );
-		blockGrabber = hardwareMap.servo.get( "blockGrabber" );
+		clawTilter = (Servo) hardwareMap.crservo.get( "clawTilter" );
+		blockGrabber = (Servo) hardwareMap.crservo.get( "blockGrabber" );
 
 		leftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 	}
@@ -73,6 +74,7 @@ public class VPTeleOp extends OpMode {
 
 		foundTogB = !foundTogB;
 	}
+
 
 	public void clawTiltTog( ) {
 
