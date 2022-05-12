@@ -13,6 +13,7 @@ public class VPTeleOp extends OpMode {
 
 	Servo foundLeft, foundRight, clawTilter, blockGrabber;
 
+
 	boolean foundTogB = false;
 	boolean blockGrabB = false;
 	boolean clawTiltB = false;
@@ -25,8 +26,8 @@ public class VPTeleOp extends OpMode {
 
 		foundLeft = hardwareMap.servo.get( "foundLeft" );
 		foundRight = hardwareMap.servo.get( "foundRight" );
-		clawTilter = (Servo) hardwareMap.crservo.get( "clawTilter" );
-		blockGrabber = (Servo) hardwareMap.crservo.get( "blockGrabber" );
+		clawTilter = hardwareMap.servo.get( "clawTilter" );
+		blockGrabber = hardwareMap.servo.get( "blockGrabber" );
 
 		leftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 	}
@@ -81,6 +82,7 @@ public class VPTeleOp extends OpMode {
 		if( clawTiltB ) {
 
 			clawTilter.setPosition( 0.75 );
+
 		} else {
 
 			clawTilter.setPosition( 0.50 );
@@ -93,7 +95,7 @@ public class VPTeleOp extends OpMode {
 
 		if( blockGrabB ) {
 
-			blockGrabber.setPosition( 0.0 );
+			blockGrabber.setPosition( 0 );
 		} else {
 
 			blockGrabber.setPosition( 0.50 );
