@@ -87,11 +87,11 @@ public class VPTeleOp extends OpMode {
 
 		if( clawTiltB ) {
 
-			clawTilter.setPosition( 0.25 );
+			clawTilter.setPosition( 0.75 );
 
 		} else {
 
-			clawTilter.setPosition( 0.50 );
+			clawTilter.setPosition( 1.0 );
 		}
 
 		clawTiltB = !clawTiltB;
@@ -101,10 +101,10 @@ public class VPTeleOp extends OpMode {
 
 		if( blockGrabB ) {
 
-			blockGrabber.setPosition( 0 );
+			blockGrabber.setPosition( 0.0 );
 		} else {
 
-			blockGrabber.setPosition( 0.50 );
+			blockGrabber.setPosition( 0.5 );
 		}
 
 		blockGrabB = !blockGrabB;
