@@ -31,6 +31,11 @@ public class VPTeleOp extends OpMode {
 		clawTilter = hardwareMap.servo.get( "clawTilter" );
 		blockGrabber = hardwareMap.servo.get( "blockGrabber" );
 
+		foundLeft.setPosition( 0.0 );
+		foundRight.setPosition( 1.0 );
+		clawTilter.setPosition( 1.0 );
+		blockGrabber.setPosition( 0.5 );
+
 		leftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 	}
 
