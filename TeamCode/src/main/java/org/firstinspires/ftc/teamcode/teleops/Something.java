@@ -61,23 +61,23 @@ public class Something extends OpMode {
 		backRight.setPower( backRightPower );
 	}
 
-	public static void waitRobot( int mills ) {
+	public void plateGrab( int mills, double power ) {
 		long startTime = System.currentTimeMillis( );
-		while( startTime + mills < System.currentTimeMillis( ) ) ;
+		while( startTime + mills < System.currentTimeMillis( ) ) {
+			plateL.setPower( power );
+			plateR.setPower( power );
+		}
 	}
 
 	public void plateToggle( boolean mode ) {
 		if( mode ) {
-			plateL.setPower( 1.0 );
-			plateR.setPower( 1.0 );
+			plateGrab( 500, 1.0 );
 			telemetry.addData( "Plate Movers:", "activated" );
 		} else {
-			plateL.setPower( -1.0 );
-			plateR.setPower( -1.0 );
+			plateGrab( 500, -1.0 );
 			telemetry.addData( "Plate Movers:", "activated" );
 		}
 		telemetry.update( );
-		waitRobot( 500 );
 	}
 
 }
