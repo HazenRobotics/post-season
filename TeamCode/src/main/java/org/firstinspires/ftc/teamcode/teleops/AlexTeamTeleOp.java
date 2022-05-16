@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "AlexTeamTeleOp", group = "TeleOp")
-
-public class AlexTeamTeleOp extends OpMode {
+public class AlexTeamTeleOP extends OpMode {
 	DcMotor frontLeft, backRight, frontRight, backLeft;
 	Servo clearance, cleared, lift, claw;
 
