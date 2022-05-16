@@ -2,21 +2,25 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.autonomous.SkystoneDetector;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
-@TeleOp(name = "LeanTeleOp", group = "TeleOp")
+@TeleOp(name = "LeanTeleop", group = "TeleOp")
 //@Disabled
+
 public class LeanTeleOp extends OpMode {
 
 	boolean limboMode = false;
 	boolean clawMode = false;
-	DcMotorEx frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
-	Servo liftBase, claw;
+	boolean aWasPressed = false;
+	boolean bWasPressed = false;
+	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
+	Servo liftBase, claw,liftToogle;
+	double power = 1;
 
 	@Override
 	public void init( ) {
@@ -30,36 +34,52 @@ public class LeanTeleOp extends OpMode {
 		backLeftMotor = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
-		backRightMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
+		liftMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
 		liftBase = hardwareMap.servo.get( "liftBase" );
-//		claw = hardwareMap.servo.get( "servo" );
+		liftToogle = hardwareMap.servo.get( "liftTooggle" );
+		claw = hardwareMap.servo.get( "claw" );
 
 
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 		backLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 
 		telemetry.addData( "Mode", "waiting for start" );
+		if( gamepad1.dpad_up && power < 1 ) {
+			power -= 0.1;
+		}
+		if( gamepad1.dpad_up && power > 0 ) {
+			power += 0.1;
+		}
 		telemetry.update( );
-		liftBase.setPosition( 0.25 );
 
-		long startTime = System.currentTimeMillis( ); // wait 2 seconds before moving the lift back
-		while( startTime + 2000 > System.currentTimeMillis( ) ) ;
-
-		liftBase.setPosition( 0 );
 	}
 
 	@Override
 	public void loop( ) {
-		SkystoneDetector stone = new SkystoneDetector( );
-		move( -gamepad1.left_stick_y * 2 / 3, gamepad1.left_stick_x, gamepad1.right_stick_x );
-		if( gamepad1.left_bumper ) {
-			while( gamepad1.a ) ;
-			limboMode = !limboMode;
-			limbo( limboMode );
+
+		Up( );
+		if( gamepad1.a ) {
+			move( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, power / 2 );
+		} else {
+			move( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, power );
+
 		}
+		if( gamepad1.dpad_up && power < 1 ) {
+			power -= 0.1;
+		}
+		if( gamepad1.dpad_up && power > 0 ) {
+			power += 0.1;
+		}
+		if( aWasPressed && !gamepad1.a ) {
+			limbo(  );
+		}
+		if( bWasPressed && !gamepad1.b) {
+			claw(  );
+		}
+		aWasPressed = gamepad1.a;
+		bWasPressed = gamepad1.b;
 
 
-		telemetry.update( );
 	}
 
 	/**
@@ -69,51 +89,45 @@ public class LeanTeleOp extends OpMode {
 	 * @param strafe strafe power
 	 * @param rotate power
 	 */
-	public void move( double drive, double strafe, double rotate ) {
-		double frontLeftPower = drive + strafe + rotate;
-		double backLeftPower = drive - strafe + rotate;
-		double frontRightPower = drive - strafe - rotate;
-		double backRightPower = drive + strafe - rotate;
+	public void move( double drive, double strafe, double rotate, double power ) {
+		double frontLeftPower = (drive + strafe + rotate/2) * power;
+		double backLeftPower = (drive - strafe + rotate/2) * power;
+		double frontRightPower = (drive - strafe - rotate/2) * power;
+		double backRightPower = (drive + strafe - rotate/2) * power;
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
-	}
-
-	/**
-	 * set individual power
-	 *
-	 * @param frontLeftPower  power
-	 * @param backLeftPower   power
-	 * @param frontRightPower power
-	 * @param backRightPower  power
-	 */
-	public void setMotorPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
 		frontLeftMotor.setPower( frontLeftPower );
 		backLeftMotor.setPower( backLeftPower );
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
 	}
 
-	public static void waitRobot( int mills ) {
-		long startTime = System.currentTimeMillis( );
-		while( startTime + mills < System.currentTimeMillis( ) ) ;
+
+	public void limbo(   ) {
+		if( !limboMode ) {
+			liftBase.setPosition( 0.4 );
+		} else {
+			liftBase.setPosition( 0 );
+		}
+		limboMode = !limboMode;
 	}
 
-	public void limbo( boolean mode ) {
-		if( mode ) {
-			liftBase.setPosition( 0 );
+	public void claw(  ) {
+		if( clawMode ) {
+			claw.setPosition( 1 );
 		} else {
-			liftBase.setPosition( 0.25 );
+			claw.setPosition( 0 );
+		}
+		clawMode = !clawMode;
+	}
+
+	public void Up( ) {
+		if( gamepad1.right_trigger > 0 ) {
+			liftMotor.setPower( 1 );
+		} else if( gamepad1.left_trigger > 0 ) {
+			liftMotor.setPower( -1 );
+		} else {
+			liftMotor.setPower( 0 );
 		}
 
-		// Sam: does the same thing:
-		// liftBase.setPosition( mode ? 0 : 0.25 );
-	}
-
-
-	public void Up( double percent ) {
-		liftMotor.setPower( 0.5 );
-		int time = (int) (1000 * percent);
-		waitRobot( time );
-		liftMotor.setPower( 0 );
 	}
 }

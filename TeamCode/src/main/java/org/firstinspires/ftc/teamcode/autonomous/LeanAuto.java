@@ -1,84 +1,114 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
+@Autonomous(name = "LeanAuto", group = "Autonomous")
 public class LeanAuto extends LinearOpMode {
-	SkystoneDetector Stone = new SkystoneDetector();
-	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
+
+	boolean limboMode = false;
+	boolean clawMode = false;
+	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
+	Servo liftBase, claw,liftToggle;
 	long startTime;
+
 	@Override
-	public void runOpMode( ) throws InterruptedException {
+	public void runOpMode( ) {
 		Robot.createMatchLogFile( getClass( ).getSimpleName( ) );
 
 		telemetry.addData( "Mode", "Initiating robot..." );
 		telemetry.update( );
+
 		frontLeftMotor = hardwareMap.get( DcMotorEx.class, "frontLeft" );
 		backLeftMotor = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
+		liftMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
+		liftBase = hardwareMap.servo.get( "liftBase" );
+		liftToggle = hardwareMap.servo.get( "liftToggle" );
+		claw = hardwareMap.servo.get( "claw" );
+
+
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 		backLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
-		
-		telemetry.addData( "Mode", "waiting for start" );
-		telemetry.update();
 
-		waitForStart();
-		startTime = System.currentTimeMillis();
-		telemetry.addData( "Mode", "TimeLeft: "+TimeLeft());
-		telemetry.update();
+		telemetry.addData( "Mode", "waiting for start" );
+		telemetry.update( );
+		waitForStart( );
+		startTime = System.currentTimeMillis( );
+		telemetry.addData( "Mode", "TimeLeft: " + TimeLeft( ) );
+		telemetry.update( );
+		//start at the edge
 		drive(1);
-		waitRobot(2000);
-		drive(0);
-		strafe( 1 );
+		waitRobot( 650 );
+		//pick up block
+		int i;
+		for(i=0; opModeIsActive()&& i<5; i+=1)
+		{
+			//grabs block and lowers lift
+			claw( );
+			limbo();
+			//moves over line
+			strafe( 1 );
+			waitRobot( 500+(i*100) );
+			//raise and drop
+			limbo();
+			claw();
+			//limbo and back over
+			limbo();
+			strafe( -1 );
+			waitRobot( 500+((i+1)*100) );
+		}
+		if(opModeIsActive())
+		{
+			limbo();
+			strafe( 1 );
+			waitRobot( 500+(i*100) );
+		}
+		while(opModeIsActive())
+		{
+			rotate( 360 ,1 );
+
+		}
 	}
 
 	public void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
-		while( startTime + mills < System.currentTimeMillis( ))
+		while( (startTime + mills) > System.currentTimeMillis( ) && opModeIsActive())
 		{
-			telemetry.update();
-			Stone.processFrame(Stone.mat);
+			telemetry.update( );
 		}
 
 	}
 
-	public void drive( double drive) {
-		double frontLeftPower = drive;
-		double backLeftPower = drive;
-		double frontRightPower = drive;
-		double backRightPower = drive;
+	public void drive( double drive ) {
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
+		setMotorPower( drive, drive, drive, drive );
 	}
 
-	public void strafe(double strafe) {
-		double frontLeftPower = 1 + strafe;
-		double backLeftPower =-strafe;
-		double frontRightPower =-strafe;
-		double backRightPower = 1 + strafe;
+	public void strafe( double strafe ) {
+		double backLeftPower = -strafe;
+		double frontRightPower = -strafe;
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
+		setMotorPower( strafe, backLeftPower, frontRightPower, strafe );
 	}
 
-	public void rotate(double rotate) {
-		double frontLeftPower = 1+ rotate;
-		double backLeftPower = 1+ rotate;
-		double frontRightPower = - rotate;
-		double backRightPower = - rotate;
+	public void rotate( int amount,int drive ) {
+		double frontRightPower = -drive;
+		double backRightPower = -drive;
 
-		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
+		setMotorPower( drive, drive, frontRightPower, backRightPower );
+		waitRobot( (int)(amount*3.5) );
 	}
 
-	public long TimeLeft()
-	{
-		return System.currentTimeMillis()-startTime+30;
+	public long TimeLeft( ) {
+		return System.currentTimeMillis( ) - startTime + 30;
 	}
 
 	public void setMotorPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
@@ -87,16 +117,27 @@ public class LeanAuto extends LinearOpMode {
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
 	}
-	public void caveManFindRock()
-	{
-		strafe( 0.5 );
-		while(Stone.getStoneType()!= SkystoneDetector.StoneType.SKYSTONE)
-		{
-			Stone.processFrame(Stone.mat);
-			telemetry.update();
+	public void limbo(   ) {
+		if( !limboMode ) {
+			liftBase.setPosition( 0.4 );
+		} else {
+			liftBase.setPosition( 0 );
 		}
-		drive(1);
+		waitRobot(300);
+		limboMode = !limboMode;
 	}
+
+	public void claw(  ) {
+		if( !clawMode ) {
+			claw.setPosition( 1 );
+		} else {
+			claw.setPosition( 0 );
+		}
+		waitRobot(300);
+		clawMode = !clawMode;
+	}
+
+
 }
 
 

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import static com.qualcomm.robotcore.hardware.Servo.MAX_POSITION;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -12,9 +14,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Something extends OpMode {
 
 	DcMotor backRight, backLeft;
-	Servo plateR, plateL;
+	CRServo plateR, plateL;
 	CRServo claw, lift;
 
+	boolean xWasPressed = false;
 	boolean plateMode = false;
 
 	@Override
@@ -23,8 +26,8 @@ public class Something extends OpMode {
 		backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		lift = hardwareMap.crservo.get( "lift" );
 		claw = hardwareMap.crservo.get( "claw" );
-		plateR = hardwareMap.servo.get( "plateR" );
-		plateL = hardwareMap.servo.get( "plateL" );
+		plateR = hardwareMap.crservo.get( "plateR" );
+		plateL = hardwareMap.crservo.get( "plateL" );
 		backRight.setDirection( DcMotorSimple.Direction.REVERSE );
 		telemetry.addData( "Mode", "waiting for start" );
 		telemetry.update( );
@@ -34,11 +37,11 @@ public class Something extends OpMode {
 	public void loop( ) {
 		move( -gamepad1.left_stick_y, gamepad1.left_stick_x );
 		scoring( gamepad1.right_stick_y, gamepad1.right_stick_x );
-		if( gamepad1.x ) {
+		if( gamepad1.x && !xWasPressed ) {
 			plateMode = !plateMode;
-			moveServo( plateMode, plateR );
-			moveServo( plateMode, plateL );
+			plateToggle( plateMode );
 		}
+		xWasPressed = gamepad1.x;
 	}
 
 	public void move( double drive, double rotate ) {
@@ -58,15 +61,23 @@ public class Something extends OpMode {
 		backRight.setPower( backRightPower );
 	}
 
-	//since it only controls the plate servos, should we rename?
-	//also I think I figured out what's wrong with the R servo (for real this time)
-	public void moveServo( boolean mode, Servo servo ) {
-		if( mode ) {
-			//shouldn't this be 180?
-			servo.setPosition( 90 );
-		} else {
-			servo.setPosition( 0 );
+	public void plateGrab( int mills, double power ) {
+		long startTime = System.currentTimeMillis( );
+		while( startTime + mills < System.currentTimeMillis( ) ) {
+			plateL.setPower( power );
+			plateR.setPower( power );
 		}
+	}
+
+	public void plateToggle( boolean mode ) {
+		if( mode ) {
+			plateGrab( 500, 1.0 );
+			telemetry.addData( "Plate Movers:", "activated" );
+		} else {
+			plateGrab( 500, -1.0 );
+			telemetry.addData( "Plate Movers:", "activated" );
+		}
+		telemetry.update( );
 	}
 
 }
