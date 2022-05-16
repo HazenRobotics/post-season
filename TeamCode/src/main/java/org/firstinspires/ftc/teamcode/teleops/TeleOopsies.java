@@ -69,7 +69,7 @@ public class TeleOopsies extends LinearOpMode {
 	public void setPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
 		frontLeft.setPower( frontLeftPower * 0.54 );
 		backLeft.setPower( backLeftPower * 0.54 );
-		frontRight.setPower( frontRightPower );
+		frontRight.setPower( frontRightPower * 0.54);
 		backRight.setPower( backRightPower * 0.54 );
 	}
 
