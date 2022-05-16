@@ -17,8 +17,9 @@ public class LeanTeleOp extends OpMode {
 	boolean limboMode = false;
 	boolean clawMode = false;
 	boolean aWasPressed = false;
+	boolean bWasPressed = false;
 	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
-	Servo liftBase, claw;
+	Servo liftBase, claw,liftToogle;
 	double power = 1;
 
 	@Override
@@ -34,8 +35,9 @@ public class LeanTeleOp extends OpMode {
 		frontRightMotor = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRightMotor = hardwareMap.get( DcMotorEx.class, "backRight" );
 		liftMotor = hardwareMap.get( DcMotorEx.class, "Lift" );
-		liftBase = hardwareMap.servo.get( "lift servo" );
-		//claw = hardwareMap.servo.get( "claw" );
+		liftBase = hardwareMap.servo.get( "liftBase" );
+		liftToogle = hardwareMap.servo.get( "liftTooggle" );
+		claw = hardwareMap.servo.get( "claw" );
 
 
 		frontLeftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
@@ -69,14 +71,14 @@ public class LeanTeleOp extends OpMode {
 			power += 0.1;
 		}
 		if( aWasPressed && !gamepad1.a ) {
-			limbo( limboMode );
-			limboMode = !limboMode;
+			limbo(  );
 		}
-		if( gamepad1.left_bumper ) {
-			//claw( clawMode );
-			clawMode = !clawMode;
+		if( bWasPressed && !gamepad1.b) {
+			claw(  );
 		}
 		aWasPressed = gamepad1.a;
+		bWasPressed = gamepad1.b;
+
 
 	}
 
@@ -100,27 +102,23 @@ public class LeanTeleOp extends OpMode {
 	}
 
 
-	public static void waitRobot( int mills ) {
-		long startTime = System.currentTimeMillis( );
-		while( startTime + mills < System.currentTimeMillis( ) ) ;
-	}
-
-	public void limbo( boolean mode ) {
-		if( !mode ) {
+	public void limbo(   ) {
+		if( !limboMode ) {
 			liftBase.setPosition( 0.4 );
 		} else {
 			liftBase.setPosition( 0 );
-
 		}
+		limboMode = !limboMode;
 	}
 
-	/*public void claw( boolean mode ) {
-		if( mode ) {
-			claw.setPosition( 90 );
+	public void claw(  ) {
+		if( clawMode ) {
+			claw.setPosition( 1 );
 		} else {
 			claw.setPosition( 0 );
 		}
-	}*/
+		clawMode = !clawMode;
+	}
 
 	public void Up( ) {
 		if( gamepad1.right_trigger > 0 ) {
@@ -130,5 +128,6 @@ public class LeanTeleOp extends OpMode {
 		} else {
 			liftMotor.setPower( 0 );
 		}
+
 	}
 }

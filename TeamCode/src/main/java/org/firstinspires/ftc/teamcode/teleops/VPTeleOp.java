@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@TeleOp()
 public class VPTeleOp extends OpMode {
 
 	DcMotor leftMotor, rightMotor;
@@ -29,6 +31,11 @@ public class VPTeleOp extends OpMode {
 		clawTilter = hardwareMap.servo.get( "clawTilter" );
 		blockGrabber = hardwareMap.servo.get( "blockGrabber" );
 
+		foundLeft.setPosition( 0.0 );
+		foundRight.setPosition( 1.0 );
+		clawTilter.setPosition( 1.0 );
+		blockGrabber.setPosition( 0.5 );
+
 		leftMotor.setDirection( DcMotorSimple.Direction.REVERSE );
 	}
 
@@ -48,12 +55,16 @@ public class VPTeleOp extends OpMode {
 			blockGrabTog( );
 		}
 
-		move( -gamepad1.left_stick_y, gamepad2.right_stick_x );
+		move( -gamepad1.left_stick_y, gamepad1.right_stick_x );
+	}
+	public static void waitRobot( int mills ) {
+		long startTime = System.currentTimeMillis( );
+		while( startTime + mills < System.currentTimeMillis( ) ) ;
 	}
 
 	public void move( double drive, double rotate ) {
 
-		double leftPower = drive - rotate;
+		double leftPower = drive + rotate;
 		double rightPower = drive - rotate;
 
 		leftMotor.setPower( leftPower );
@@ -85,7 +96,7 @@ public class VPTeleOp extends OpMode {
 
 		} else {
 
-			clawTilter.setPosition( 0.50 );
+			clawTilter.setPosition( 1.0 );
 		}
 
 		clawTiltB = !clawTiltB;
@@ -95,10 +106,10 @@ public class VPTeleOp extends OpMode {
 
 		if( blockGrabB ) {
 
-			blockGrabber.setPosition( 0 );
+			blockGrabber.setPosition( 1.0 );
 		} else {
 
-			blockGrabber.setPosition( 0.50 );
+			blockGrabber.setPosition( 0.5 );
 		}
 
 		blockGrabB = !blockGrabB;
