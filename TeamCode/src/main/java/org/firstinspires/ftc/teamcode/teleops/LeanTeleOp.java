@@ -112,10 +112,10 @@ public class LeanTeleOp extends OpMode {
 	}
 
 	public void claw(  ) {
-		if( clawMode ) {
-			claw.setPosition( 1 );
+		if( !clawMode ) {
+			claw.setPosition( 0.58 );
 		} else {
-			claw.setPosition( 0 );
+			claw.setPosition( 0.4 );
 		}
 		clawMode = !clawMode;
 	}
