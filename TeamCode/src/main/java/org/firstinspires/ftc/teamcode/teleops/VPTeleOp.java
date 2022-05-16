@@ -106,7 +106,7 @@ public class VPTeleOp extends OpMode {
 
 		if( blockGrabB ) {
 
-			blockGrabber.setPosition( 0.0 );
+			blockGrabber.setPosition( 1.0 );
 		} else {
 
 			blockGrabber.setPosition( 0.5 );
