@@ -11,6 +11,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp()
 public class VPTeleOp extends OpMode {
 
+	boolean yWasPressed = false;
+	boolean xWasPressed = false;
+	boolean aWasPressed = false;
+
 	DcMotor leftMotor, rightMotor;
 
 	Servo foundLeft, foundRight, clawTilter, blockGrabber;
@@ -43,19 +47,23 @@ public class VPTeleOp extends OpMode {
 	@Override
 	public void loop( ) {
 
-		if( gamepad1.y ) {
+		// isPressed && !wasPressed
+		if( gamepad1.y && !yWasPressed ) { // isPressed && wasNotPressed
 			foundTog( );
 		}
 
-		if( gamepad1.x ) {
+		if( gamepad1.x && !xWasPressed) {
 			clawTiltTog( );
 		}
 
-		if( gamepad1.a ) {
+		if( gamepad1.a && !aWasPressed) {
 			blockGrabTog( );
 		}
 
 		move( -gamepad1.left_stick_y, gamepad1.right_stick_x );
+		yWasPressed = gamepad1.y;
+		xWasPressed = gamepad1.x;
+		aWasPressed = gamepad1.a;
 	}
 	public static void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
