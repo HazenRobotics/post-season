@@ -12,6 +12,8 @@ public class AlexTeamTeleOP extends OpMode {
 	DcMotor frontLeft, backRight, frontRight, backLeft;
 	Servo clearance, cleared, lift, claw;
 
+	// adding more chagnes to file
+
 	@Override
 	public void init( ) {
 		frontRight = hardwareMap.get( DcMotorEx.class, "frontRight" );
