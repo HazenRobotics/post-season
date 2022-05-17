@@ -16,6 +16,19 @@ public class AutoOopsies extends LinearOpMode {
 	DcMotorEx backRight;
 
 	public void runOpMode() {
+		//Initializes motors
+		motorStarter();
+		
+		waitForStart();
+
+		// run until the end of the match (driver presses STOP)
+		while (opModeIsActive()) {
+			
+
+		}
+	}
+
+	pubic void motorStarter() {
 		frontLeft = hardwareMap.get( DcMotorEx.class, "frontLeft" );
 		backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRight = hardwareMap.get( DcMotorEx.class, "frontRight" );
@@ -24,15 +37,11 @@ public class AutoOopsies extends LinearOpMode {
 		frontRight.setDirection(DcMotor.Direction.REVERSE);
 		backRight.setDirection(DcMotor.Direction.REVERSE);
 
-		waitForStart();
-
-		// run until the end of the match (driver presses STOP)
-		while (opModeIsActive()) {
-
-
-		}
+		frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+		backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+		frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+		backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 	}
-
 
 	public void waitRobot( long time ) {
 		long elapsedTime = System.currentTimeMillis() + (time * 1000) ;
