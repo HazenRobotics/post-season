@@ -12,7 +12,7 @@ public class AlexTeamTeleOP extends OpMode {
 	DcMotor frontLeft, backRight, frontRight, backLeft;
 	Servo clearance, cleared, lift, claw;
 
-	// adding more chagnes to file
+	// adding more changes to file
 
 	@Override
 	public void init( ) {
