@@ -44,26 +44,35 @@ public class LeanAuto extends LinearOpMode {
 		startTime = System.currentTimeMillis( );
 		telemetry.addData( "Mode", "TimeLeft: " + TimeLeft( ) );
 		telemetry.update( );
+		claw();
+		claw();
+		/**
 		//start at the edge
 		drive(1);
 		waitRobot( 650 );
 		//pick up block
+
 		int i;
 		for(i=0; opModeIsActive()&& i<5; i+=1)
 		{
-			//grabs block and lowers lift
-			claw( );
-			limbo();
-			//moves over line
-			strafe( 1 );
-			waitRobot( 500+(i*100) );
-			//raise and drop
-			limbo();
-			claw();
-			//limbo and back over
-			limbo();
-			strafe( -1 );
-			waitRobot( 500+((i+1)*100) );
+
+			for(int j=0; opModeIsActive()&&j<2; j++)
+			{
+				//grabs block and lowers lift
+				claw( );
+				limbo();
+				//moves over line
+				strafe( 1 );
+				waitRobot( 500+(i*100) );
+				//raise and drop
+				limbo();
+				claw();
+				//limbo and back over
+				limbo();
+				strafe( -1 );
+				waitRobot( 500+((i+1)*100) );
+			}
+
 		}
 		if(opModeIsActive())
 		{
@@ -76,7 +85,9 @@ public class LeanAuto extends LinearOpMode {
 			rotate( 360 ,1 );
 
 		}
+		**/
 	}
+
 
 	public void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
@@ -123,17 +134,17 @@ public class LeanAuto extends LinearOpMode {
 		} else {
 			liftBase.setPosition( 0 );
 		}
-		waitRobot(300);
+		waitRobot(1000);
 		limboMode = !limboMode;
 	}
 
 	public void claw(  ) {
 		if( !clawMode ) {
-			claw.setPosition( 1 );
+			claw.setPosition( 0.58 );
 		} else {
-			claw.setPosition( 0 );
+			claw.setPosition( 0.4 );
 		}
-		waitRobot(300);
+		waitRobot(1000);
 		clawMode = !clawMode;
 	}
 
