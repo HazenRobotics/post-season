@@ -14,8 +14,9 @@ public class AutoOopsies extends LinearOpMode {
 	DcMotorEx backLeft;
 	DcMotorEx frontRight;
 	DcMotorEx backRight;
-	final static int ppr = 1440; // number of pulses/ticks in one revolution of the motor
-
+	final static double ppr = 1440; // number of pulses/ticks in one revolution of the motor
+	final static double gearRatio = 60; //60:1 gear ratio
+	final static double encoderRadius = 4; //inches
 	public void runOpMode( ) {
 		//Initializes motors
 		vroomvroom( );
@@ -25,6 +26,9 @@ public class AutoOopsies extends LinearOpMode {
 		backLeft.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 		frontRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 		backRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
+
+		setMotorTargets( 12 );
+
 	}
 
 	public void vroomvroom( ) {
@@ -35,6 +39,33 @@ public class AutoOopsies extends LinearOpMode {
 
 		frontRight.setDirection( DcMotor.Direction.REVERSE );
 		backRight.setDirection( DcMotor.Direction.REVERSE );
+	}
+
+	public void setMotorTargets ( int distance ) {
+		frontLeft.setTargetPosition( convertDistTicks ( distance ) );
+		backLeft.setTargetPosition( convertDistTicks ( distance ) );
+		frontRight.setTargetPosition( convertDistTicks ( distance ) );
+		backRight.setTargetPosition( convertDistTicks ( distance ) );
+
+		move( 1, 1, 1 );
+	}
+
+	public static int convertDistTicks( double distance, double wheelRadius, double pulsesPerRevolution, double gearRatio ) {
+		double revolutions = distance / Math.PI * 2 * wheelRadius;
+		return (int) Math.round( (revolutions * pulsesPerRevolution) / gearRatio );
+	}
+
+	public int convertDistTicks( double distance ) {
+		return convertDistTicks( distance, encoderRadius, ppr, gearRatio );
+	}
+
+	public static double convertTicksDist( int ticks, double wheelRadius, double pulsesPerRevolution, double gearRatio ) {
+		double circumference = 2 * Math.PI * wheelRadius;
+		return (ticks * circumference * gearRatio) / pulsesPerRevolution;
+	}
+
+	public double convertTicksDist( int ticks ) {
+		return convertTicksDist( ticks, encoderRadius, ppr, gearRatio );
 	}
 
 	public void setPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {

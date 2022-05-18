@@ -28,8 +28,8 @@ public class TeleOopsies extends LinearOpMode {
 	@Override
 	public void runOpMode( ) {
 		//2 servos on this bad boy
-		lift = hardwareMap.crservo.get( "liftServo" );
-		claw = hardwareMap.servo.get( "clawServo" );
+		lift = hardwareMap.crservo.get( "lift" );
+		claw = hardwareMap.servo.get( "claw" );
 
 		//Motors getting set up
 		vroomvroom( );
