@@ -15,37 +15,35 @@ public class AutoOopsies extends LinearOpMode {
 	DcMotorEx frontRight;
 	DcMotorEx backRight;
 
-	public void runOpMode() {
+	public void runOpMode( ) {
 		//Initializes motors
-		motorStarter();
+		vroomvroom( );
 		
-		waitForStart();
+		waitForStart( );
 
 		// run until the end of the match (driver presses STOP)
-		while (opModeIsActive()) {
-			
-
-		}
+		
+		
 	}
 
-	pubic void motorStarter() {
+	pubic void vroomvroom( ) {
 		frontLeft = hardwareMap.get( DcMotorEx.class, "frontLeft" );
 		backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRight = hardwareMap.get( DcMotorEx.class, "frontRight" );
 		backRight = hardwareMap.get( DcMotorEx.class, "backRight" );
 
-		frontRight.setDirection(DcMotor.Direction.REVERSE);
-		backRight.setDirection(DcMotor.Direction.REVERSE);
+		frontRight.setDirection( DcMotor.Direction.REVERSE );
+		backRight.setDirection( DcMotor.Direction.REVERSE );
 
-		frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-		backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-		frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-		backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+		frontLeft.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
+		backLeft.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
+		frontRight.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
+		backRight.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
 	}
 
 	public void waitRobot( long time ) {
-		long elapsedTime = System.currentTimeMillis() + (time * 1000) ;
-		while(System.currentTimeMillis() < elapsedTime) {
+		long elapsedTime = System.currentTimeMillis( ) + ( time * 1000 ) ;
+		while( System.currentTimeMillis( ) < elapsedTime ) {
 
 		}
 	}
@@ -53,7 +51,7 @@ public class AutoOopsies extends LinearOpMode {
 	public void setPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
 		frontLeft.setPower( frontLeftPower * 0.54 );
 		backLeft.setPower( backLeftPower * 0.54 );
-		frontRight.setPower( frontRightPower * 0.54);
+		frontRight.setPower( frontRightPower );
 		backRight.setPower( backRightPower * 0.54 );
 	}
 
