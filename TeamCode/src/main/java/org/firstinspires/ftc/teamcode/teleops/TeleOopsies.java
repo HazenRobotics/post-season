@@ -24,6 +24,8 @@ public class TeleOopsies extends LinearOpMode {
 	DcMotorEx backRight;
 	CRServo lift;
 	Servo claw;
+	boolean buttonPressed;
+
 
 	@Override
 	public void runOpMode( ) {
@@ -60,11 +62,21 @@ public class TeleOopsies extends LinearOpMode {
 	//left trigger is for the claw, 2 positions - released and clutch
 	public void buttonOps( ) {
 		if( gamepad1.right_bumper )
-			lift.setPower( 1.0 );
-		if( gamepad1.left_bumper  && claw.getPosition( ) == 0.0 )
-			claw.setPosition( 0.6 );
-		if( gamepad1.left_bumper  && claw.getPosition( ) == 0.6 )
+			lift.setPower( 1 );
+		else if ( !gamepad1.right_bumper )
+			lift.setPower( 0 );
+		if( gamepad1.left_bumper ) {
+			lift.setPower( -1 );
+		}
+
+		if( gamepad1.a  && !buttonPressed) {
+			claw.setPosition( 0.9 );
+			buttonPressed = !buttonPressed;
+		}
+		else if( gamepad1.a) {
 			claw.setPosition( 0.0 );
+			buttonPressed = !buttonPressed;
+		}
 	}
 
 	//Motor setup method

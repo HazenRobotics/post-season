@@ -31,7 +31,7 @@ public class AutoOopsies extends LinearOpMode {
 		backRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 
 		drive = true;
-		setMotorTargets( 12, drive, strafe, rotate );
+		setMotorTargets( 12 );
 		drive = false;
 
 	}
@@ -54,9 +54,9 @@ public class AutoOopsies extends LinearOpMode {
 
 		if(drive)
 			move( 1, 0, 0 );
-		if(strafe)
+		else if(strafe)
 			move( 0, 1, 0 );
-		if(rotate)
+		else if(rotate)
 			move( 0, 0, 1 );
 		
 	}
