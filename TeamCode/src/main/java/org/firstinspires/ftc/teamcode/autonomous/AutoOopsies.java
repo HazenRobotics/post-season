@@ -17,6 +17,9 @@ public class AutoOopsies extends LinearOpMode {
 	final static double ppr = 1440; // number of pulses/ticks in one revolution of the motor
 	final static double gearRatio = 60; //60:1 gear ratio
 	final static double encoderRadius = 4; //inches
+	boolean drive;
+	boolean strafe;
+	boolean rotate;
 	public void runOpMode( ) {
 		//Initializes motors
 		vroomvroom( );
@@ -27,7 +30,9 @@ public class AutoOopsies extends LinearOpMode {
 		frontRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 		backRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 
-		setMotorTargets( 12 );
+		drive = true;
+		setMotorTargets( 12, drive, strafe, rotate );
+		drive = false;
 
 	}
 
@@ -41,14 +46,19 @@ public class AutoOopsies extends LinearOpMode {
 		backRight.setDirection( DcMotor.Direction.REVERSE );
 	}
 
-	public void setMotorTargets ( int distance, boolean drive, boolean strafe, boolean rotate ) {
+	public void setMotorTargets ( int distance ) {
 		frontLeft.setTargetPosition( convertDistTicks ( distance ) );
 		backLeft.setTargetPosition( convertDistTicks ( distance ) );
 		frontRight.setTargetPosition( convertDistTicks ( distance ) );
 		backRight.setTargetPosition( convertDistTicks ( distance ) );
 
 		if(drive)
-		move( 1, 0, 0 );
+			move( 1, 0, 0 );
+		if(strafe)
+			move( 0, 1, 0 );
+		if(rotate)
+			move( 0, 0, 1 );
+		
 	}
 
 	public static int convertDistTicks( double distance, double wheelRadius, double pulsesPerRevolution, double gearRatio ) {
