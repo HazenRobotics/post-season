@@ -47,7 +47,7 @@ public class AutoOopsies extends LinearOpMode {
 		frontRight.setTargetPosition( convertDistTicks ( distance ) );
 		backRight.setTargetPosition( convertDistTicks ( distance ) );
 
-		move( 1, 1, 1 );
+		move( 1, 0, 0 );
 	}
 
 	public static int convertDistTicks( double distance, double wheelRadius, double pulsesPerRevolution, double gearRatio ) {
