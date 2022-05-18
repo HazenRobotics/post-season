@@ -41,12 +41,13 @@ public class AutoOopsies extends LinearOpMode {
 		backRight.setDirection( DcMotor.Direction.REVERSE );
 	}
 
-	public void setMotorTargets ( int distance ) {
+	public void setMotorTargets ( int distance, boolean drive, boolean strafe, boolean rotate ) {
 		frontLeft.setTargetPosition( convertDistTicks ( distance ) );
 		backLeft.setTargetPosition( convertDistTicks ( distance ) );
 		frontRight.setTargetPosition( convertDistTicks ( distance ) );
 		backRight.setTargetPosition( convertDistTicks ( distance ) );
 
+		if(drive)
 		move( 1, 0, 0 );
 	}
 
