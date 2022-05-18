@@ -14,19 +14,20 @@ public class AutoOopsies extends LinearOpMode {
 	DcMotorEx backLeft;
 	DcMotorEx frontRight;
 	DcMotorEx backRight;
+	final static int ppr = 1440; // number of pulses/ticks in one revolution of the motor
 
 	public void runOpMode( ) {
 		//Initializes motors
 		vroomvroom( );
-		
 		waitForStart( );
 
-		// run until the end of the match (driver presses STOP)
-		
-		
+		frontLeft.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
+		backLeft.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
+		frontRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
+		backRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 	}
 
-	pubic void vroomvroom( ) {
+	public void vroomvroom( ) {
 		frontLeft = hardwareMap.get( DcMotorEx.class, "frontLeft" );
 		backLeft = hardwareMap.get( DcMotorEx.class, "backLeft" );
 		frontRight = hardwareMap.get( DcMotorEx.class, "frontRight" );
@@ -34,18 +35,6 @@ public class AutoOopsies extends LinearOpMode {
 
 		frontRight.setDirection( DcMotor.Direction.REVERSE );
 		backRight.setDirection( DcMotor.Direction.REVERSE );
-
-		frontLeft.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
-		backLeft.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
-		frontRight.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
-		backRight.setMode( DcMotorEx.RunMode.RUN_USING_ENCODER );
-	}
-
-	public void waitRobot( long time ) {
-		long elapsedTime = System.currentTimeMillis( ) + ( time * 1000 ) ;
-		while( System.currentTimeMillis( ) < elapsedTime ) {
-
-		}
 	}
 
 	public void setPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {

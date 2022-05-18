@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 @TeleOp( name = "TeleOopsies - team Pancit", group = "Linear Opmode" )
 
@@ -26,7 +28,7 @@ public class TeleOopsies extends LinearOpMode {
 	@Override
 	public void runOpMode( ) {
 		//2 servos on this bad boy
-		lift = hardwareMap.servo.get( "liftServo" );
+		lift = hardwareMap.crservo.get( "liftServo" );
 		claw = hardwareMap.servo.get( "clawServo" );
 
 		//Motors getting set up
@@ -45,11 +47,11 @@ public class TeleOopsies extends LinearOpMode {
 
 	//Prints all the info during teleOp to allow user to be aware of power settings and servo positions
 	public void printInfo( ) {
-		telemetry.addLine( "gamepad1.left_stick_y: " + gamepad.left_stick_y );
+		telemetry.addLine( "gamepad1.left_stick_y: " + gamepad1.left_stick_y );
 		telemetry.addLine( "gamepad1.left_stick_x: " + gamepad1.left_stick_x );
 		telemetry.addLine( "- gamepad1.right_stick_x: " + -gamepad1.right_stick_x );
-		telemetry.addLine( "lift power: " + lift.getPosition( ) );
-		telemetry.addLine( "claw power: " + claw.getPower( ) );
+		telemetry.addLine( "lift power: " + lift.getPower( ) );
+		telemetry.addLine( "claw power: " + claw.getPosition( ) );
 		telemetry.update( );
 	}
 
@@ -57,11 +59,11 @@ public class TeleOopsies extends LinearOpMode {
 	//right trigger is for the lift, press and hold
 	//left trigger is for the claw, 2 positions - released and clutch
 	public void buttonOps( ) {
-		if( gamepad.right_trigger ) 
+		if( gamepad1.right_bumper )
 			lift.setPower( 1.0 );
-		if( gamepad.left_trigger  && claw.getPosition( ) == 0.0 ) 
+		if( gamepad1.left_bumper  && claw.getPosition( ) == 0.0 )
 			claw.setPosition( 0.6 );
-		if( gamepad.left_trigger  && claw.getPosition( ) == 0.6 )
+		if( gamepad1.left_bumper  && claw.getPosition( ) == 0.6 )
 			claw.setPosition( 0.0 );
 	}
 
