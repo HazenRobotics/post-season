@@ -24,14 +24,16 @@ public class TeleOopsies extends LinearOpMode {
 	DcMotorEx backRight;
 	CRServo lift;
 	Servo claw;
+	// Servo backClaw;
 	boolean buttonPressed;
-
 
 	@Override
 	public void runOpMode( ) {
 		//2 servos on this bad boy
 		lift = hardwareMap.crservo.get( "lift" );
 		claw = hardwareMap.servo.get( "claw" );
+		// backClaw = hardwareMap.servo.get( "backClaw" );
+
 
 		//Motors getting set up
 		vroomvroom( );
@@ -42,6 +44,8 @@ public class TeleOopsies extends LinearOpMode {
 			//move using controls
 			//d-pad for drive and strafe (forward/backward, left/right ), right joystick for rotate
 			move( gamepad1.left_stick_y, gamepad1.left_stick_x, -gamepad1.right_stick_x );
+			//left bumper to make lift go up, right to make it go down
+			//button A for lift (it is a bit scuffed)
 			buttonOps( );
 			printInfo( );
 		}
@@ -91,7 +95,8 @@ public class TeleOopsies extends LinearOpMode {
 	}
 
 	//sets power to the motors, but frontRight doesn't move as fast. 
-	//as a result, everything except frontRight gets 0.54 norm power
+	//as a result, everything except frontRight gets 0.55 norm power
+	//This is needed because the everything except frontRight is a Torquenado
 	public void setPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
 		frontLeft.setPower( frontLeftPower * 0.55 );
 		backLeft.setPower( backLeftPower * 0.55 );
@@ -100,16 +105,21 @@ public class TeleOopsies extends LinearOpMode {
 	}
 
 	//puts power to wheels to move forward and backward
+	//putting power to all of the wheels will bring the robot forward, negative is backward
 	public void drive( double power ) {
 		setPower( power, power, power, power );
 	}
 
 	//puts power to wheels to move left and right
+	//front wheel is opposite of same side back wheel
+	//frontLeft forward, while backLeft goes backward
+	//frontRight forward, while backRight goes backward
 	public void strafe( double power ) {
 		setPower( power, -power, -power, power );
 	}
 
-	//puts power to rotate wheels
+	//puts power to ROTATE wheels
+	//left goes forward, right goes backward
 	public void rotate( double power ) {
 		setPower( power, power, -power, -power );
 	}
