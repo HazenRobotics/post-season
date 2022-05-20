@@ -29,11 +29,7 @@ public class AutoOopsies extends LinearOpMode {
 		backLeft.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 		frontRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 		backRight.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
-
-		drive = true;
-		setMotorTargets( 12 );
-		drive = false;
-
+		
 	}
 
 	public void vroomvroom( ) {
