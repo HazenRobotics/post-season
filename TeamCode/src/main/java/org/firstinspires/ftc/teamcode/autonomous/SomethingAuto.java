@@ -39,6 +39,7 @@ public class SomethingAuto extends LinearOpMode {
 		//start at the edge
 		drive(1);
 		waitRobot( 1146);
+		drive(0);
 	}
 
 	public void waitRobot( int mills ) {
