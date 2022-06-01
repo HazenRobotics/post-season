@@ -7,13 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@TeleOp(name = "AlexTeamTeleOp", group = "TeleOp")
 public class AlexTeamTeleOP {
-	@TeleOp(name = "AlexTeamTeleOp", group = "TeleOp")
 
 	public class LearnTeleOp extends OpMode {
 
 		DcMotor frontLeft, backRight, frontRight, backLeft;
 		Servo clearance, lift;
+
 		@Override
 		public void init( ) {
 			frontRight = hardwareMap.get( DcMotorEx.class, "frontRight" );
@@ -34,8 +35,7 @@ public class AlexTeamTeleOP {
 			drive( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
 			if( gamepad1.a ) {
 				//clearance.setPosition( 0 );
-			}
-			else {
+			} else {
 				//clearance.setPosition( 0 );
 			}
 			if( gamepad1.right_bumper ) {
