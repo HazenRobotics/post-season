@@ -15,7 +15,7 @@ public class LeanAuto extends LinearOpMode {
 	boolean limboMode = false;
 	boolean clawMode = false;
 	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, liftMotor;
-	Servo liftBase, claw,liftToggle;
+	Servo liftBase, claw, liftToggle;
 	long startTime;
 
 	@Override
@@ -44,55 +44,54 @@ public class LeanAuto extends LinearOpMode {
 		startTime = System.currentTimeMillis( );
 		telemetry.addData( "Mode", "TimeLeft: " + TimeLeft( ) );
 		telemetry.update( );
-		claw();
-		claw();
+		claw( );
+		claw( );
 		/**
-		//start at the edge
-		drive(1);
-		waitRobot( 650 );
-		//pick up block
+		 //start at the edge
+		 drive(1);
+		 waitRobot( 650 );
+		 //pick up block
 
-		int i;
-		for(i=0; opModeIsActive()&& i<5; i+=1)
-		{
+		 int i;
+		 for(i=0; opModeIsActive()&& i<5; i+=1)
+		 {
 
-			for(int j=0; opModeIsActive()&&j<2; j++)
-			{
-				//grabs block and lowers lift
-				claw( );
-				limbo();
-				//moves over line
-				strafe( 1 );
-				waitRobot( 500+(i*100) );
-				//raise and drop
-				limbo();
-				claw();
-				//limbo and back over
-				limbo();
-				strafe( -1 );
-				waitRobot( 500+((i+1)*100) );
-			}
+		 for(int j=0; opModeIsActive()&&j<2; j++)
+		 {
+		 //grabs block and lowers lift
+		 claw( );
+		 limbo();
+		 //moves over line
+		 strafe( 1 );
+		 waitRobot( 500+(i*100) );
+		 //raise and drop
+		 limbo();
+		 claw();
+		 //limbo and back over
+		 limbo();
+		 strafe( -1 );
+		 waitRobot( 500+((i+1)*100) );
+		 }
 
-		}
-		if(opModeIsActive())
-		{
-			limbo();
-			strafe( 1 );
-			waitRobot( 500+(i*100) );
-		}
-		while(opModeIsActive())
-		{
-			rotate( 360 ,1 );
+		 }
+		 if(opModeIsActive())
+		 {
+		 limbo();
+		 strafe( 1 );
+		 waitRobot( 500+(i*100) );
+		 }
+		 while(opModeIsActive())
+		 {
+		 rotate( 360 ,1 );
 
-		}
-		**/
+		 }
+		 **/
 	}
 
 
 	public void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
-		while( (startTime + mills) > System.currentTimeMillis( ) && opModeIsActive())
-		{
+		while( (startTime + mills) > System.currentTimeMillis( ) && opModeIsActive( ) ) {
 			telemetry.update( );
 		}
 
@@ -110,12 +109,12 @@ public class LeanAuto extends LinearOpMode {
 		setMotorPower( strafe, backLeftPower, frontRightPower, strafe );
 	}
 
-	public void rotate( int amount,int drive ) {
+	public void rotate( int amount, int drive ) {
 		double frontRightPower = -drive;
 		double backRightPower = -drive;
 
 		setMotorPower( drive, drive, frontRightPower, backRightPower );
-		waitRobot( (int)(amount*3.5) );
+		waitRobot( (int) (amount * 3.5) );
 	}
 
 	public long TimeLeft( ) {
@@ -128,23 +127,24 @@ public class LeanAuto extends LinearOpMode {
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
 	}
-	public void limbo(   ) {
+
+	public void limbo( ) {
 		if( !limboMode ) {
 			liftBase.setPosition( 0.4 );
 		} else {
 			liftBase.setPosition( 0 );
 		}
-		waitRobot(1000);
+		waitRobot( 1000 );
 		limboMode = !limboMode;
 	}
 
-	public void claw(  ) {
+	public void claw( ) {
 		if( !clawMode ) {
 			claw.setPosition( 0.58 );
 		} else {
 			claw.setPosition( 0.4 );
 		}
-		waitRobot(1000);
+		waitRobot( 1000 );
 		clawMode = !clawMode;
 	}
 
