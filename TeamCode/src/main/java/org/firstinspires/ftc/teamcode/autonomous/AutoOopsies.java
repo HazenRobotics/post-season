@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+@Autonomous(name = "AutoOopsies", group = "Autonomous")
 
 public class AutoOopsies extends LinearOpMode {
 	DcMotorEx frontLeft;
@@ -24,6 +27,8 @@ public class AutoOopsies extends LinearOpMode {
 		//Initializes motors
 		vroomvroom( );
 		waitForStart( );
+		drive = true;
+		setMotorTargets( 2000 );
 
 		frontLeft.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
 		backLeft.setMode( DcMotorEx.RunMode.RUN_TO_POSITION );
@@ -42,7 +47,7 @@ public class AutoOopsies extends LinearOpMode {
 		backRight.setDirection( DcMotor.Direction.REVERSE );
 	}
 
-	public void setMotorTargets ( int distance ) {
+	public void setMotorTargets ( double distance ) {
 		frontLeft.setTargetPosition( convertDistTicks ( distance ) );
 		backLeft.setTargetPosition( convertDistTicks ( distance ) );
 		frontRight.setTargetPosition( convertDistTicks ( distance ) );

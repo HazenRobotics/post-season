@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
+		import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+		import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+		import com.qualcomm.robotcore.hardware.CRServo;
+		import com.qualcomm.robotcore.hardware.DcMotor;
+		import com.qualcomm.robotcore.hardware.DcMotorEx;
+		import com.qualcomm.robotcore.hardware.DcMotorSimple;
+		import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "AlexTeamTeleOp", group = "TeleOp")
 public class AlexTeamTeleOP {
+	@TeleOp(name = "AlexTeamTeleOp", group = "TeleOp")
 
 	public class LearnTeleOp extends OpMode {
 
@@ -41,24 +41,28 @@ public class AlexTeamTeleOP {
 		public void loop( ) {
 			drive( -gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
 
-			claw( gamepad1.right_trigger, gamepad1.left_trigger );
+			claw(gamepad1.right_trigger, gamepad1.left_trigger);
 
 			if( gamepad1.b ) {
 				clearance.setPower( 1 );
 				cleared.setPower( -1 );
-			} else if( gamepad1.a ) {
+			}
+			else if( gamepad1.a ) {
 				clearance.setPower( -1 );
 				cleared.setPower( 1 );
-			} else {
+			}
+			else {
 				cleared.setPower( 0 );
 				clearance.setPower( 0 );
 			}
 
 			if( gamepad1.right_bumper ) {
 				lift.setPower( 1 );
-			} else if( gamepad1.left_bumper ) {
-				lift.setPower( -1 );
-			} else {
+			}
+			else if( gamepad1.left_bumper ) {
+				lift.setPower(-1);
+			}
+			else {
 				lift.setPower( 0 );
 			}
 		}
