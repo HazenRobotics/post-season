@@ -3,17 +3,14 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.teamcode.robots.Robot;
 
 @TeleOp(name = "PR bot", group = "TeleOp")
 //@Disabled
 public class PRBot extends OpMode {
 
-	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor,launcherLeft,launcherRight;
+	DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor, launcherLeft, launcherRight;
 	Servo launcherServo;
 	boolean aWasPressed = false;
 
@@ -43,18 +40,17 @@ public class PRBot extends OpMode {
 	@Override
 	public void loop( ) {
 
-		move( gamepad1.left_stick_y , gamepad1.left_stick_x, gamepad1.right_stick_x );
+		move( gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x );
 
-		if (aWasPressed && !gamepad1.a) {
-			ring();
+		if( aWasPressed && !gamepad1.a ) {
+			ring( );
 		}
-		double power=gamepad1.left_trigger+gamepad1.right_trigger;
-		if(power>1)
-		{
-			power=1;
+		double power = gamepad1.left_trigger + gamepad1.right_trigger;
+		if( power > 1 ) {
+			power = 1;
 		}
 		launcherLeft.setPower( power );
-		launcherRight.setPower( power );
+		launcherRight.setPower( power * 0.95 );
 		aWasPressed = gamepad1.a;
 
 		telemetry.update( );
@@ -62,7 +58,8 @@ public class PRBot extends OpMode {
 
 	/**
 	 * set directional power
-	 * @param drive power
+	 *
+	 * @param drive  power
 	 * @param strafe strafe power
 	 * @param rotate power
 	 */
@@ -77,10 +74,11 @@ public class PRBot extends OpMode {
 
 	/**
 	 * set individual power
-	 * @param frontLeftPower power
-	 * @param backLeftPower power
+	 *
+	 * @param frontLeftPower  power
+	 * @param backLeftPower   power
 	 * @param frontRightPower power
-	 * @param backRightPower power
+	 * @param backRightPower  power
 	 */
 	public void setMotorPower( double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower ) {
 		frontLeftMotor.setPower( frontLeftPower );
@@ -88,12 +86,13 @@ public class PRBot extends OpMode {
 		frontRightMotor.setPower( frontRightPower );
 		backRightMotor.setPower( backRightPower );
 	}
-	public void ring()
-	{
-	launcherServo.setPosition( 0 );
-	waitRobot( 500 );
-	launcherServo.setPosition( 0.5 );
+
+	public void ring( ) {
+		launcherServo.setPosition( 0.5 );
+		waitRobot( 500 );
+		launcherServo.setPosition( 1 );
 	}
+
 	public void waitRobot( int mills ) {
 		long startTime = System.currentTimeMillis( );
 		while( (startTime + mills) > System.currentTimeMillis( ) ) {

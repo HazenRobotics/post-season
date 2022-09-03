@@ -52,18 +52,22 @@ public class VPTeleOp extends OpMode {
 			foundTog( );
 		}
 
-		if( gamepad1.x && !xWasPressed ) {
+		if( gamepad1.x && !xWasPressed) {
 			clawTiltTog( );
 		}
 
-		if( gamepad1.a && !aWasPressed ) {
+		if( gamepad1.a && !aWasPressed) {
 			blockGrabTog( );
 		}
 
-		move( gamepad1.left_stick_y, -gamepad1.right_stick_x );
+		move( -gamepad1.left_stick_y, gamepad1.right_stick_x );
 		yWasPressed = gamepad1.y;
 		xWasPressed = gamepad1.x;
 		aWasPressed = gamepad1.a;
+	}
+	public static void waitRobot( int mills ) {
+		long startTime = System.currentTimeMillis( );
+		while( startTime + mills < System.currentTimeMillis( ) ) ;
 	}
 
 	public void move( double drive, double rotate ) {
