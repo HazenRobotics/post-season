@@ -64,10 +64,10 @@ public class PRBot extends OpMode {
 	 * @param rotate power
 	 */
 	public void move( double drive, double strafe, double rotate ) {
-		double frontLeftPower = drive + strafe + rotate;
-		double backLeftPower = drive - strafe + rotate;
-		double frontRightPower = drive - strafe - rotate;
-		double backRightPower = drive + strafe - rotate;
+		double frontLeftPower = drive - strafe - rotate;
+		double backLeftPower = drive + strafe - rotate;
+		double frontRightPower = drive + strafe + rotate;
+		double backRightPower = drive - strafe + rotate;
 
 		setMotorPower( frontLeftPower, backLeftPower, frontRightPower, backRightPower );
 	}
